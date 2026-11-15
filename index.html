@@ -235,6 +235,7 @@ footer a{color:var(--muted)}
       <div class="seg" role="group" aria-label="Вид мапи"><button data-tiles="topo" aria-pressed="true">Мапа</button><button data-tiles="sat" aria-pressed="false">Супутник</button></div></div>
       <div class="filters" id="mapf"></div></div>
     <div id="map"></div>
+    <p class="note" style="margin-top:6px">Зум: щипок на тачпаді, Ctrl/⌘ + колесо або кнопки +/−.</p>
     <div class="legend" id="legend"></div>
     <p class="note" id="mapnote" hidden></p>
   </section>
@@ -609,7 +610,8 @@ function popup(img,title,sub,links){return `${img?`<img src="${esc(img)}" alt=""
 function initMap(){
   const note=$("#mapnote");
   if(!window.L){note.hidden=false;note.textContent="Мапа не завантажилась. Відкрий сайт olehh3103.github.io/fjord-trip.";return}
-  map=L.map("map",{scrollWheelZoom:false,zoomControl:true});
+  map=L.map("map",{scrollWheelZoom:false,zoomControl:true,zoomSnap:0.25,zoomDelta:0.5});
+  pinchZoom(map);
   const dark=document.documentElement.dataset.theme?document.documentElement.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
   const esri=s=>`https://server.arcgisonline.com/ArcGIS/rest/services/${s}/MapServer/tile/{z}/{y}/{x}`;
   const attr='Tiles &copy; <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a> — Esri, HERE, Garmin, OpenStreetMap, USGS';
@@ -625,6 +627,22 @@ function initMap(){
     DAYS.filter(d=>dayNo(d.id)>=3).map(d=>`<button aria-pressed="false" data-mf="${d.id}">День ${dayNo(d.id)}</button>`).join("");
   $("#legend").innerHTML=DAYS.filter(d=>dayNo(d.id)>=3).map(d=>`<span><i style="background:${DAYCOL[d.id]}"></i>День ${dayNo(d.id)}: ${esc(d.tab)}</span>`).join("")+'<span>🏠 ночівля</span><span>✈ аеропорт</span>';
   drawMap();
+}
+/* Trackpad pinch (ctrl+wheel in Chrome/Firefox/Edge, gesture events in Safari) and Ctrl/Cmd+wheel zoom the map, not the page.
+   A plain two-finger scroll still scrolls the page. */
+function pinchZoom(m){
+  const el=m.getContainer(); let acc=0,pt=null,raf=0,g0=null;
+  const apply=()=>{raf=0;const z=Math.max(3,Math.min(18,m.getZoom()-acc*0.012));acc=0;m.setZoomAround(pt,z,{animate:false})};
+  el.addEventListener("wheel",e=>{
+    if(!(e.ctrlKey||e.metaKey)) return;
+    e.preventDefault();
+    acc+=e.deltaMode===1?e.deltaY*16:e.deltaY; pt=m.mouseEventToContainerPoint(e);
+    if(!raf) raf=requestAnimationFrame(apply);
+  },{passive:false});
+  if(navigator.maxTouchPoints>0) return; /* phones/tablets: Leaflet's own touch zoom handles pinch */
+  el.addEventListener("gesturestart",e=>{e.preventDefault();g0=m.getZoom();pt=m.mouseEventToContainerPoint(e)},{passive:false});
+  el.addEventListener("gesturechange",e=>{e.preventDefault();if(g0==null) return;m.setZoomAround(pt,Math.max(3,Math.min(18,g0+Math.log2(e.scale))),{animate:false})},{passive:false});
+  el.addEventListener("gestureend",e=>{e.preventDefault();g0=null},{passive:false});
 }
 const groups={};
 function drawMap(){
