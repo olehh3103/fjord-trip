@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Маршрут Осло → фьорди → Берген, березень 2027">
+<title>Норвегія · березень 2027</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: Airbnb-like — sticky search pill, category bar of days, card grids, sticky price bar at the bottom */
+:root{
+  --bg:#ffffff; --surface:#f7f7f7; --card:#ffffff; --fg:#222222; --muted:#6a6a6a; --line:#e6e6e6;
+  --accent:#e0435e; --accent-ink:#ffffff; --accent-soft:#fdecef; --good:#1f7a55; --warn:#b26a00;
+  --shadow:0 6px 20px rgba(0,0,0,.08); --shadow-strong:0 10px 30px rgba(0,0,0,.14);
+  --font:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141414; --surface:#1d1d1d; --card:#1b1b1b; --fg:#f1f1f1; --muted:#a3a3a3; --line:#2e2e2e;
+  --accent:#ff5c77; --accent-ink:#1a0006; --accent-soft:#3a1720; --good:#5fd39f; --warn:#f0b04a;
+  --shadow:0 6px 20px rgba(0,0,0,.5); --shadow-strong:0 10px 30px rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141414; --surface:#1d1d1d; --card:#1b1b1b; --fg:#f1f1f1; --muted:#a3a3a3; --line:#2e2e2e;
+  --accent:#ff5c77; --accent-ink:#1a0006; --accent-soft:#3a1720; --good:#5fd39f; --warn:#f0b04a;
+  --shadow:0 6px 20px rgba(0,0,0,.5); --shadow-strong:0 10px 30px rgba(0,0,0,.6); color-scheme:dark}
+*{box-sizing:border-box}
+html{color-scheme:light}
+img{max-width:100%}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 96px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3{text-wrap:balance;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+
+/* header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line);margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:12px max(16px,env(safe-area-inset-left,0px)) 0}
+.bar{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--accent);font-size:20px;letter-spacing:-.02em;white-space:nowrap}
+.logo svg{width:28px;height:28px}
+.pill{flex:1;min-width:0;display:flex;align-items:center;border:1px solid var(--line);border-radius:999px;box-shadow:var(--shadow);background:var(--card);max-width:640px;margin:0 auto}
+.pill>div{padding:8px 18px;min-width:0;border-right:1px solid var(--line)}
+.pill>div:last-child{border-right:0;display:flex;align-items:center;gap:8px;padding-right:8px}
+.pill small{display:block;font-size:11px;font-weight:700;letter-spacing:.02em}
+.pill span{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--card);font-weight:700;line-height:1}
+.stepper button:disabled{opacity:.35;cursor:default}
+.stepper b{min-width:20px;text-align:center;font-variant-numeric:tabular-nums}
+.theme{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 12px;font-size:13px}
+
+/* categories (days) */
+.cats{max-width:1180px;margin:10px auto 0;display:flex;gap:28px;overflow-x:auto;scrollbar-width:none;padding-bottom:0}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px 10px;border:0;background:none;color:var(--muted);border-bottom:2px solid transparent;font-size:12px;font-weight:600}
+.cat .ic{font-size:22px;line-height:1;filter:grayscale(.2)}
+.cat:hover{color:var(--fg);border-bottom-color:var(--line)}
+.cat[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--fg)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:170px 170px;gap:8px;border-radius:var(--r);overflow:hidden;margin:20px 0 14px}
+.hero figure{margin:0;position:relative;min-width:0}
+.hero figure:first-child{grid-row:span 2}
+.hero img{width:100%;height:100%;object-fit:cover;display:block}
+.cred{position:absolute;right:8px;bottom:8px;font-size:11px;background:rgba(0,0,0,.55);color:#fff;padding:2px 8px;border-radius:999px;text-decoration:none}
+.cred:hover{background:rgba(0,0,0,.8)}
+.title-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.title-row h1{font-size:28px;letter-spacing:-.02em}
+.sub{color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;background:var(--card);white-space:nowrap}
+.chip.warn{border-color:transparent;background:var(--accent-soft);color:var(--accent);font-weight:600}
+
+/* day sections */
+section.day{padding:30px 0 10px;border-top:1px solid var(--line);margin-top:22px;scroll-margin-top:150px}
+.day-head{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.day-head h2{font-size:22px;letter-spacing:-.01em}
+.eyebrow{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+.day-head p{margin:6px 0 0;color:var(--muted);max-width:62ch}
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:10px;padding:10px 14px;font-weight:600;font-size:14px;text-decoration:none;border:1px solid var(--fg);background:var(--card)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:hover{box-shadow:var(--shadow)}
+.timeline{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
+.timeline .chip b{font-weight:700}
+h3.row-title{font-size:17px;margin:22px 0 12px;display:flex;align-items:center;gap:8px}
+h3.row-title small{font-weight:500;color:var(--muted);font-size:13px}
+
+/* cards grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px 18px}
+.card{min-width:0;position:relative}
+.ph{position:relative;aspect-ratio:20/19;border-radius:var(--r);overflow:hidden;background:var(--surface);max-width:100%}
+.ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}
+.card:hover .ph img{transform:scale(1.03)}
+.ph .noimg{display:grid;place-items:center;height:100%;color:var(--muted);font-size:13px;padding:16px;text-align:center}
+.heart{position:absolute;top:10px;right:10px;width:34px;height:34px;border:0;background:none;padding:0}
+.heart svg{width:26px;height:26px;fill:rgba(0,0,0,.45);stroke:#fff;stroke-width:2}
+.heart[aria-pressed="true"] svg{fill:var(--accent)}
+.badge{position:absolute;top:12px;left:12px;background:var(--card);color:var(--fg);font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;box-shadow:var(--shadow)}
+.meta{padding-top:10px;display:flex;flex-direction:column;gap:2px}
+.meta .l1{display:flex;justify-content:space-between;gap:8px;font-weight:600}
+.meta .l1 span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta .muted{color:var(--muted);font-size:14px}
+.meta .price{margin-top:4px}
+.meta .price b{font-weight:700}
+.links{display:flex;gap:12px;margin-top:6px;font-size:13px;flex-wrap:wrap}
+.links a{color:var(--muted);text-underline-offset:3px}
+.links a:hover{color:var(--fg)}
+.pick{margin-top:8px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+.card.chosen .ph{outline:3px solid var(--accent);outline-offset:-3px}
+.card.chosen .pick{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+
+/* flight cards */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:13px}
+.filters button[aria-pressed="true"]{border-color:var(--fg);background:var(--fg);color:var(--bg)}
+.flights{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.fl{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--card);display:flex;flex-direction:column;gap:6px;min-width:0;cursor:pointer;text-align:left}
+.fl:hover{box-shadow:var(--shadow)}
+.fl.chosen{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.fl .route{display:flex;align-items:center;gap:8px;font-weight:700;font-size:17px;font-variant-numeric:tabular-nums}
+.fl .route i{flex:1;height:1px;background:var(--line);position:relative}
+.fl .route i::after{content:"✈";position:absolute;right:-2px;top:-10px;font-style:normal;font-size:13px;color:var(--muted)}
+.fl .when{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.fl .bottom{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.fl .p{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.fl .p small{font-size:12px;color:var(--muted);font-weight:500}
+.fl a{font-size:13px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin-top:10px;max-width:75ch}
+
+/* toggle */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--surface);gap:3px;flex-wrap:wrap}
+.seg button{border:0;background:none;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--fg);box-shadow:var(--shadow)}
+
+/* info boxes */
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+.box{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--card);min-width:0}
+.box h4{margin:0 0 6px;font-size:14px}
+.box p,.box ul{margin:0;color:var(--muted);font-size:14px}
+.box ul{padding-left:18px}
+.temps{display:flex;gap:6px;align-items:flex-end;height:70px;margin-top:8px}
+.temps div{flex:1;border-radius:6px 6px 2px 2px;background:var(--accent-soft);position:relative;min-width:0}
+.temps div span{position:absolute;top:-18px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* sticky budget bar */
+.reserve{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--card);border-top:1px solid var(--line);box-shadow:var(--shadow-strong);
+  padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.reserve .in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:16px;justify-content:space-between;flex-wrap:wrap}
+.reserve .tot{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.reserve .tot small{font-size:14px;font-weight:500;color:var(--muted)}
+.reserve .why{font-size:13px;color:var(--muted)}
+details.break{position:relative}
+details.break summary{list-style:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-weight:600;font-size:14px}
+details.break summary::-webkit-details-marker{display:none}
+details.break .pop{position:absolute;bottom:calc(100% + 14px);right:0;width:min(360px,calc(100vw - 32px));background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-strong);padding:16px}
+.pop table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.pop td{padding:5px 0;border-bottom:1px solid var(--line)}
+.pop td:last-child{text-align:right;font-weight:600}
+.pop tr:last-child td{border-bottom:0;font-size:16px;font-weight:800}
+.pop p{font-size:12px;color:var(--muted);margin:10px 0 0}
+
+footer{color:var(--muted);font-size:13px;margin-top:40px;border-top:1px solid var(--line);padding-top:16px}
+footer a{color:var(--muted)}
+
+@media (max-width:760px){
+  .pill>div:nth-child(2){display:none}
+  .hero{grid-template-columns:1fr 1fr;grid-template-rows:180px 110px}
+  .hero figure:first-child{grid-column:span 2;grid-row:auto}
+  .hero figure:nth-child(n+4){display:none}
+  .title-row h1{font-size:23px}
+  .cats{gap:20px}
+}
+@media (max-width:480px){.pill>div:first-child{display:none}.logo span{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="bar">
+    <div class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M2 26 12 9l5 8 4-5 9 14z"/><path fill="var(--bg)" d="m12 9 2.6 4.2L12 12l-2 2.2z"/></svg><span>fjord trip</span></div>
+    <div class="pill" role="group" aria-label="Параметри поїздки">
+      <div><small>Куди</small><span>Осло → фьорди → Берген</span></div>
+      <div><small>Коли</small><span>13–20 березня 2027</span></div>
+      <div><div><small>Хто</small><span id="whoLabel">6 людей</span></div>
+        <div class="stepper"><button id="minus" aria-label="Менше людей">−</button><b id="ppl">6</b><button id="plus" aria-label="Більше людей">+</button></div></div>
+    </div>
+    <button class="theme" id="themeBtn" aria-label="Перемкнути тему">◐</button>
+  </div>
+  <nav class="cats" id="cats" role="tablist" aria-label="Дні"></nav>
+</header>
+
+<main class="wrap">
+  <div class="hero" id="hero"></div>
+  <div class="title-row">
+    <div>
+      <h1>Норвегія на авто: Осло, фьорди, Берген</h1>
+      <div class="sub">8 днів · 2 дні в Осло, 5 днів дороги фьордами · ночуємо поза туристичними центрами</div>
+    </div>
+    <div class="seg" role="group" aria-label="Як повертаємось">
+      <button id="retB" aria-pressed="true">Назад через Осло</button>
+      <button id="retA" aria-pressed="false">Летимо з Бергена</button>
+    </div>
+  </div>
+  <div class="chips">
+    <span class="chip">🌡 −4…+6 °C</span><span class="chip">☀ ~12 год світла</span><span class="chip">🚗 ~1 250 км по кільцю</span>
+    <span class="chip warn">Язик троля взимку закритий: лід</span>
+  </div>
+  <div id="days"></div>
+  <footer>
+    Ціни на 15.11.2026 і змінюються. Нічого не заброньовано. Житло Airbnb вказано за весь будинок на всіх (без сервісного збору), авто й пальне орієнтовні.
+    Фото локацій: Wikimedia Commons (посилання на кожному фото), фото житла: Airbnb. Курси: 1 € ≈ 11,7 NOK ≈ 49 ₴.
+  </footer>
+</main>
+
+<div class="reserve" role="region" aria-label="Бюджет">
+  <div class="in">
+    <div>
+      <div class="tot" id="tot">—</div>
+      <div class="why" id="why">на людину · без житла в Осло</div>
+    </div>
+    <details class="break" id="breakBox">
+      <summary>Як рахується</summary>
+      <div class="pop"><table id="bt"></table><p id="bnote"></p></div>
+    </details>
+  </div>
+</div>
+
+<script>
+/* ======== DATA ======== */
+const IMG={"akershus_fortress": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/14-09-02-oslo-RalfR-370.jpg/960px-14-09-02-oslo-RalfR-370.jpg", "aurlandsfjord": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/View_of_the_Aurlandsfjord%2C_Aurlandsvangen_and_Flam_from_below_the_Prest_Summit.jpg/960px-View_of_the_Aurlandsfjord%2C_Aurlandsvangen_and_Flam_from_below_the_Prest_Summit.jpg", "borgund_stave_church": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Borgund_Stave_Church_in_L%C3%A6rdalen%2C_2013_June.jpg/960px-Borgund_Stave_Church_in_L%C3%A6rdalen%2C_2013_June.jpg", "bryggen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Bryggen%2C_Bergen%2C_Noruega%2C_2019-09-08%2C_DD_115-117_PAN.jpg/960px-Bryggen%2C_Bergen%2C_Noruega%2C_2019-09-08%2C_DD_115-117_PAN.jpg", "flam": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/Aurlandsfjorden_fr%C3%A5_Sn%C3%B8vegen.jpg/960px-Aurlandsfjorden_fr%C3%A5_Sn%C3%B8vegen.jpg", "flam_line": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Fl%C3%A5msbana.jpg/960px-Fl%C3%A5msbana.jpg", "floibanen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/be/%22Die_einzige_Standseilbahn_Norwegens%22._07.jpg/960px-%22Die_einzige_Standseilbahn_Norwegens%22._07.jpg", "floyen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Fl%C3%B8yen_fjerde_sundagen_i_advent.jpg/960px-Fl%C3%B8yen_fjerde_sundagen_i_advent.jpg", "fram_museum": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/Fram_Museum_building%2C_February_2018.jpg/960px-Fram_Museum_building%2C_February_2018.jpg", "gudvangen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Gudvangen_kai.jpg/960px-Gudvangen_kai.jpg", "hardanger_bridge": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Hardangerbrua_%2815028061131%29.png/960px-Hardangerbrua_%2815028061131%29.png", "hardangerfjord": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Odda-Hardangerfjord.jpg", "hardangervidda": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Hardangervidda.jpg/960px-Hardangervidda.jpg", "holmenkollbakken": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Bakken2.jpg/960px-Bakken2.jpg", "latefossen": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Laatefossen_Odde.jpg", "laerdal_tunnel": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/L%C3%A6rdalstunnelen_Norway.JPG/960px-L%C3%A6rdalstunnelen_Norway.JPG", "laerdalsoyri": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/P1000425Laerdal.JPG/960px-P1000425Laerdal.JPG", "norheimsund": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Norheimsund_i_Kvam.JPG/960px-Norheimsund_i_Kvam.JPG", "naeroyfjord": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Naer%C3%B8yfjorden.jpg/960px-Naer%C3%B8yfjorden.jpg", "oslo_opera_house": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Oslo_Opera_House_-_2025.jpg/960px-Oslo_Opera_House_-_2025.jpg", "stegastein": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Stegastein_viewpoint_-_panoramio_%281%29.jpg/960px-Stegastein_viewpoint_-_panoramio_%281%29.jpg", "steinsdalsfossen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7f/Steinsdalsfossen.jpg/960px-Steinsdalsfossen.jpg", "tvindefossen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Cascada_Tvindefossen.jpg/960px-Cascada_Tvindefossen.jpg", "ulriken": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Ulriken_-_panoramio.jpg/960px-Ulriken_-_panoramio.jpg", "voringsfossen": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Voringsfossen_waterfall_at_Eidfjord%2C_Norway.jpg/960px-Voringsfossen_waterfall_at_Eidfjord%2C_Norway.jpg", "frogner_park": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/Vigeland_Sculpture_Park_-_Panoramic_view_towards_the_Monolith%2C_Oslo%2C_Norway.jpg/960px-Vigeland_Sculpture_Park_-_Panoramic_view_towards_the_Monolith%2C_Oslo%2C_Norway.jpg"};
+const STAYIMG={"29516796": "https://a0.muscache.com/im/pictures/8039aab5-7765-4d7a-91e8-770b1f0fc842.jpg?im_w=720", "1081042490774945659": "https://a0.muscache.com/im/pictures/hosting/Hosting-1081042490774945659/original/8939e742-5086-4267-a7e4-85599a776ee1.jpeg?im_w=720", "1096859838087809838": "https://a0.muscache.com/im/pictures/e7e5228d-5fa7-4125-b25c-a58647a5550e.jpg?im_w=720", "1768202606552241503": "https://a0.muscache.com/im/pictures/hosting/Hosting-1768202606552241503/original/f7ee0fe6-a04e-44cf-a893-231158fdc353.jpeg?im_w=720", "25534618": "https://a0.muscache.com/im/pictures/hosting/Hosting-25534618/original/f70311e3-42dc-46fb-85e9-bf7d5700481c.jpeg?im_w=720", "1555037108043434520": "https://a0.muscache.com/im/pictures/hosting/Hosting-1555037108043434520/original/5f57bfd7-97f2-44ef-b267-70e1d8531605.jpeg?im_w=720", "1691444561407376248": "https://a0.muscache.com/im/pictures/hosting/Hosting-1691444561407376248/original/f61bd122-786e-4cae-9304-d9fb70939387.jpeg?im_w=720", "1778124896238954150": "https://a0.muscache.com/im/pictures/hosting/Hosting-1778124896238954150/original/58d648f5-ecb8-4e7b-9a14-c12d1c17dde2.jpeg?im_w=720", "939025188962404335": "https://a0.muscache.com/im/pictures/miso/Hosting-939025188962404335/original/be756e64-b7e9-4ca4-892b-87a06fc4fbfd.jpeg?im_w=720", "1257243743575976647": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTI1NzI0Mzc0MzU3NTk3NjY0Nw%3D%3D/original/145b2ede-c83c-458a-89c9-23183332e1b3.jpeg?im_w=720", "659390183149165537": "https://a0.muscache.com/im/pictures/miso/Hosting-659390183149165537/original/e8785e49-ec4d-46e0-8ad1-bd32c74e957e.jpeg?im_w=720", "18744581": "https://a0.muscache.com/im/pictures/hosting/Hosting-18744581/original/4306bc40-6c78-41b9-b371-c9711f62589a.jpeg?im_w=720"};
+const NOK=1/11.7, UAH=1/49;
+const W=f=>"https://commons.wikimedia.org/wiki/File:"+encodeURIComponent(f.replace(/ /g,"_"));
+const M=q=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
+const R=(o,d,w)=>"https://www.google.com/maps/dir/?api=1&travelmode=driving&origin="+encodeURIComponent(o)+"&destination="+encodeURIComponent(d)+(w?"&waypoints="+encodeURIComponent(w.join("|")):"");
+
+const P={ /* local photos, each with its Commons source */
+ opera:["oslo_opera_house","Oslo_Opera_House_-_2025.jpg"],
+ akershus:["akershus_fortress","14-09-02-oslo-RalfR-370.jpg"],
+ fram:["fram_museum","Fram_Museum_building,_February_2018.jpg"],
+ vigeland:["frogner_park","Vigeland_Sculpture_Park_-_Panoramic_view_towards_the_Monolith,_Oslo,_Norway.jpg"],
+ holmen:["holmenkollbakken","Bakken2.jpg"],
+ borgund:["borgund_stave_church","Borgund_Stave_Church_in_Lærdalen,_2013_June.jpg"],
+ tunnel:["laerdal_tunnel","Lærdalstunnelen_Norway.JPG"],
+ laerdal:["laerdalsoyri","P1000425Laerdal.JPG"],
+ stegastein:["stegastein","Stegastein_viewpoint_-_panoramio_(1).jpg"],
+ aurland:["aurlandsfjord","View_of_the_Aurlandsfjord,_Aurlandsvangen_and_Flam_from_below_the_Prest_Summit.jpg"],
+ flamline:["flam_line","Flåmsbana.jpg"],
+ flam:["flam","Aurlandsfjorden_frå_Snøvegen.jpg"],
+ naeroy:["naeroyfjord","Naerøyfjorden.jpg"],
+ gudvangen:["gudvangen","Gudvangen_kai.jpg"],
+ tvinde:["tvindefossen","Cascada_Tvindefossen.jpg"],
+ bridge:["hardanger_bridge","Hardangerbrua_(15028061131).png"],
+ voring:["voringsfossen","Voringsfossen_waterfall_at_Eidfjord,_Norway.jpg"],
+ hfjord:["hardangerfjord","Odda-Hardangerfjord.jpg"],
+ steinsdal:["steinsdalsfossen","Steinsdalsfossen.jpg"],
+ norheim:["norheimsund","Norheimsund_i_Kvam.JPG"],
+ late:["latefossen","Laatefossen_Odde.jpg"],
+ bryggen:["bryggen","Bryggen,_Bergen,_Noruega,_2019-09-08,_DD_115-117_PAN.jpg"],
+ floyen:["floyen","Fløyen_fjerde_sundagen_i_advent.jpg"],
+ floibanen:["floibanen","\"Die_einzige_Standseilbahn_Norwegens\"._07.jpg"],
+ ulriken:["ulriken","Ulriken_-_panoramio.jpg"],
+ vidda:["hardangervidda","Hardangervidda.jpg"]
+};
+
+const FLIGHTS={
+ out:[
+  {f:"GDN",fc:"Гданськ",t:"TRF",d:"2027-03-13",dep:"12:05",arr:"13:40",a:"Ryanair",p:17,p6:102,u:"https://kiwi.com/u/w4r8g3s"},
+  {f:"KRK",fc:"Краків",t:"TRF",d:"2027-03-13",dep:"11:20",arr:"13:30",a:"Ryanair",p:19,p6:144,u:"https://kiwi.com/u/bybrsfm"},
+  {f:"POZ",fc:"Познань",t:"TRF",d:"2027-03-13",dep:"08:05",arr:"09:50",a:"Ryanair",p:21,p6:128,u:"https://kiwi.com/u/nmxqxz"},
+  {f:"GDN",fc:"Гданськ",t:"TRF",d:"2027-03-13",dep:"15:45",arr:"17:20",a:"Ryanair",p:20,p6:124,u:"https://kiwi.com/u/3kn9wz"},
+  {f:"KRK",fc:"Краків",t:"TRF",d:"2027-03-12",dep:"13:55",arr:"16:05",a:"Ryanair",p:19,p6:115,u:"https://kiwi.com/u/c2z2455"},
+  {f:"SZZ",fc:"Щецин",t:"OSL",d:"2027-03-12",dep:"10:30",arr:"12:05",a:"Wizz Air",p:16,p6:98,u:"https://kiwi.com/u/6827733"},
+  {f:"POZ",fc:"Познань",t:"TRF",d:"2027-03-14",dep:"14:05",arr:"15:50",a:"Ryanair",p:17,p6:103,u:"https://kiwi.com/u/uf2ttsp"},
+  {f:"WRO",fc:"Вроцлав",t:"TRF",d:"2027-03-12",dep:"07:20",arr:"09:15",a:"Ryanair",p:24,p6:149,u:"https://kiwi.com/u/4cr4pcp"},
+  {f:"KRK",fc:"Краків",t:"TRF",d:"2027-03-13",dep:"06:15",arr:"08:25",a:"Ryanair",p:29,p6:178,u:"https://kiwi.com/u/3j5d5u"}
+ ],
+ backOslo:[
+  {f:"TRF",t:"KRK",tc:"Краків",d:"2027-03-21",dep:"14:45",arr:"16:50",a:"Ryanair",p:40,p6:240,u:"https://kiwi.com/u/zkzzjgw"},
+  {f:"TRF",t:"POZ",tc:"Познань",d:"2027-03-21",dep:"16:15",arr:"17:55",a:"Ryanair",p:28,p6:173,u:"https://kiwi.com/u/rm7v68"},
+  {f:"TRF",t:"GDN",tc:"Гданськ",d:"2027-03-21",dep:"19:40",arr:"21:10",a:"Ryanair",p:38,p6:229,u:"https://kiwi.com/u/ghpg5wv"},
+  {f:"TRF",t:"WRO",tc:"Вроцлав",d:"2027-03-21",dep:"09:00",arr:"10:55",a:"Ryanair",p:47,p6:330,u:"https://kiwi.com/u/ffbk5w"},
+  {f:"TRF",t:"POZ",tc:"Познань",d:"2027-03-22",dep:"13:20",arr:"15:00",a:"Ryanair",p:40,p6:240,u:"https://kiwi.com/u/677f3z"}
+ ],
+ backBergen:[
+  {f:"BGO",t:"KRK",tc:"Краків",d:"2027-03-21",dep:"07:05",arr:"09:25",a:"Norwegian",p:108,p6:637,u:"https://kiwi.com/u/buxwtc"},
+  {f:"BGO",t:"GDN",tc:"Гданськ",d:"2027-03-21",dep:"08:55",arr:"10:40",a:"Wizz Air",p:83,p6:518,u:"https://kiwi.com/u/m7jm273"},
+  {f:"BGO",t:"KRK",tc:"Краків",d:"2027-03-21",dep:"21:10",arr:"23:30",a:"Wizz Air",p:121,p6:741,u:"https://kiwi.com/u/cgw4fgy"},
+  {f:"BGO",t:"KRK",tc:"Краків",d:"2027-03-19",dep:"21:10",arr:"23:30",a:"Wizz Air",p:73,p6:493,u:"https://kiwi.com/u/c2xjucm",early:true}
+ ]
+};
+
+/* STAYS_START */
+const STAYS={
+ N3:[
+  {id:"29516796",name:"Cabin B",place:"Борґунд",lat:61.05704,lng:7.67147,bedrooms:4,beds:8,rating:"4.93 (151)",priceUah:15183,url:"https://www.airbnb.com/rooms/29516796",why:"біля церкви, камін",badge:"Наш вибір"},
+  {id:"1081042490774945659",name:"New cabin at Tyin Filefjell",place:"Філефьєлл, E16",lat:61.1774,lng:8.219,bedrooms:4,beds:6,rating:"5.0 (7)",priceUah:16607,url:"https://www.airbnb.com/rooms/1081042490774945659",why:"нова хата в горах"},
+  {id:"1096859838087809838",name:"Kvammehuset at Old Lærdalsøyri",place:"Лердалсойрі",lat:61.09835,lng:7.48141,bedrooms:4,beds:4,rating:"4.86 (57)",priceUah:27761,url:"https://www.airbnb.com/rooms/1096859838087809838",why:"старе місто, 2 ванні",badge:"Атмосферно"}
+ ],
+ N4:[
+  {id:"25534618",name:"House with stunning views and EV charger",place:"Оппгейм, Восс",lat:60.80338,lng:6.64053,bedrooms:2,beds:7,rating:"4.87 (841)",priceUah:10062,url:"https://www.airbnb.com/rooms/25534618",why:"озеро, камін, на E16",badge:"Наш вибір"},
+  {id:"1768202606552241503",name:"Vetleflaten 17",place:"Восс",lat:60.628,lng:6.4374,bedrooms:3,beds:5,rating:"4.69 (13)",priceUah:8998,url:"https://www.airbnb.com/rooms/1768202606552241503",why:"найдешевше"},
+  {id:"1555037108043434520",name:"Traditional Cabin · Sauna & View",place:"Воссестранд",lat:60.828,lng:6.4641,bedrooms:3,beds:5,rating:"4.85 (26)",priceUah:19777,url:"https://www.airbnb.com/rooms/1555037108043434520",why:"сауна, 2,5 ванні",badge:"Сауна"}
+ ],
+ N5:[
+  {id:"1691444561407376248",name:"Idyllic house in Strandebarm",place:"Страндебарм",lat:60.2515,lng:6.0066,bedrooms:3,beds:8,rating:"5.0 (6)",priceUah:7919,url:"https://www.airbnb.com/rooms/1691444561407376248",why:"на березі фьорду, +25 хв",badge:"Наш вибір"},
+  {id:"1778124896238954150",name:"Skeie Farmyard",place:"Нургеймсунн",lat:60.3666,lng:6.0871,bedrooms:3,beds:5,rating:"new",priceUah:11388,url:"https://www.airbnb.com/rooms/1778124896238954150",why:"ферма просто на маршруті"},
+  {id:"939025188962404335",name:"Bue · view of the Hardangerfjord",place:"Бу, біля мосту",lat:60.4444,lng:6.7905,bedrooms:2,beds:7,rating:"4.88 (111)",priceUah:16142,url:"https://www.airbnb.com/rooms/939025188962404335",why:"панорама фьорду",badge:"Вид"}
+ ],
+ N6:[
+  {id:"1257243743575976647",name:"Floor in Storheia",place:"Фана, Берген",lat:60.2997,lng:5.3204,bedrooms:3,beds:3,rating:"4.89 (127)",priceUah:10913,url:"https://www.airbnb.com/rooms/1257243743575976647",why:"3 двоспальні, парковка",badge:"Наш вибір"},
+  {id:"659390183149165537",name:"Cozy house near Bergen",place:"Арна, Берген",lat:60.4541,lng:5.5281,bedrooms:4,beds:4,rating:"4.81 (123)",priceUah:10913,url:"https://www.airbnb.com/rooms/659390183149165537",why:"на виїзді з Бергена"},
+  {id:"18744581",name:"Spacious Bergen House · Sleeps 8",place:"Нестун, Берген",lat:60.33738,lng:5.36367,bedrooms:5,beds:6,rating:"4.9 (21)",priceUah:25199,url:"https://www.airbnb.com/rooms/18744581",why:"5 спалень, панорама",badge:"Вид"}
+ ]
+};
+for(const k in STAYS) STAYS[k].forEach(s=>s.photo=STAYIMG[s.id]);
+/* STAYS_END */
+
+const DAYS=[
+ {id:"day-0",ic:"✈️",tab:"День 0",date:"сб, 13 березня",title:"Дорога в Осло",
+  text:"Лоукости з Польщі по 16–21 €. Більшість летить у Торп (Сандефьорд), звідти Torp-Ekspressen до Осло за ~2 год (~350 NOK).",
+  flights:"out",
+  info:[["🚌 Зі Львова","Найближчий прямий рейс з Кракова: 4–5 год автобусом чи потягом. З Жешува, Катовиць і Любліна прямих немає."],
+        ["🎒 Багаж","Ціни лише за маленьку сумку під сидіння. Ручна поклажа +15–30 € за рейс."],
+        ["🏠 Ночуємо","В Осло, житло вже є."]]},
+ {id:"day-1",ic:"🏛️",tab:"Осло",date:"нд, 14 березня",title:"Осло: центр і фьорд",
+  route:[M("Oslo Opera House"),"Опера → Акерсгус → Акер Брюгге"],
+  places:[["opera","Дах Опери","Ходиш по даху, як по льодовику","Oslo Opera House"],
+          ["akershus","Фортеця Акерсгус","Вид на Осло-фьорд","Akershus Fortress"]],
+  tip:"Увечері плавуча сауна на фьорді (KOK або Oslo Badstuforening) і пірнути в +3 °C воду."},
+ {id:"day-2",ic:"🛷",tab:"Осло",date:"пн, 15 березня",title:"Осло: музеї й сани",
+  route:[R("Fram Museum","Frognerseteren",["Vigeland Park"]),"Бюгдьой → Віґеланд → Голменколлен"],
+  places:[["fram","Музей Fram","Справжній полярний корабель","Fram Museum Oslo"],
+          ["vigeland","Парк Віґеланда","200+ скульптур, безкоштовно","Vigeland Park"],
+          ["holmen","Голменколлен","Трамплін, а поруч 2 км санної траси Korketrekkeren","Holmenkollbakken"]],
+  tip:"Метро лінії 1 до Frognerseteren, там можна взяти сани в прокат. У березні траса працює, якщо є сніг."},
+ {id:"day-3",ic:"⛪",tab:"Лердал",date:"вт, 16 березня",title:"Осло → Борґунд → Лердал",drive:"~4 год 45 хв · 320 км",
+  route:[R("Oslo","Lærdalsøyri",["Borgund Stave Church"]),"Маршрут у Google Maps"],
+  text:"Беремо авто й їдемо E16, яка відкрита цілий рік.",
+  places:[["borgund","Церква Борґунд","Дерев'яна церква 1180 року","Borgund Stave Church"],
+          ["laerdal","Старий Лердалсойрі","Дерев'яне містечко XVIII ст.","Lærdalsøyri"]],
+  stays:"N3",car:true},
+ {id:"day-4",ic:"🚂",tab:"Флом",date:"ср, 17 березня",title:"Stegastein, Flåmsbana, Нерейфьорд",drive:"~1 год 30 хв за кермом",
+  route:[R("Lærdalsøyri","Voss",["Stegastein","Flåm","Gudvangen","Stalheim Hotel"]),"Маршрут у Google Maps"],
+  timeline:[["08:30","Stegastein, 650 м над фьордом"],["10:00","Flåmsbana туди-назад, ~2 год"],["14:45","Круїз Флом → Гудванген, 2 год"],["17:00","Сталгейм → ночівля біля Восса"]],
+  places:[["stegastein","Stegastein","Майданчик над Аурланд-фьордом","Stegastein viewpoint"],
+          ["flamline","Flåmsbana","Залізниця з перепадом 863 м · ~530 NOK","Flåm Railway"],
+          ["naeroy","Нерейфьорд","Фьорд ЮНЕСКО · круїз ~610 NOK","Nærøyfjord"],
+          ["gudvangen","Гудванген","Тут фьорд найвужчий","Gudvangen"]],
+  tip:"Поки всі пливуть, двоє водіїв за 20 хв переганяють авто з Флома в Гудванген.",
+  stays:"N4"},
+ {id:"day-5",ic:"💦",tab:"Гардангер",date:"чт, 18 березня",title:"Водоспади Гардангера",drive:"~3 год · 190 км",
+  route:[R("Voss","Norheimsund",["Tvindefossen","Hardanger Bridge","Vøringsfossen","Ulvik"]),"Маршрут у Google Maps"],
+  places:[["tvinde","Tvindefossen","110 м, просто біля E16","Tvindefossen"],
+          ["bridge","Гардангер-брю","Міст 1,3 км над фьордом","Hardanger Bridge"],
+          ["voring","Vøringsfossen","182 м · +1 год гаку від Ейдфьорда","Vøringsfossen"],
+          ["steinsdal","Steinsdalsfossen","Можна пройти за водоспадом","Steinsdalsfossen"],
+          ["late","Låtefossen (гак)","Подвійний водоспад біля Одди · +2,5 год","Låtefossen"]],
+  stays:"N5"},
+ {id:"day-6",ic:"🏘️",tab:"Берген",date:"пт, 19 березня",title:"Берген",drive:"~1 год 15 хв",
+  route:[R("Norheimsund","Bryggen Bergen"),"Маршрут у Google Maps"],
+  places:[["bryggen","Брюгген","Ганзейська набережна, ЮНЕСКО","Bryggen Bergen"],
+          ["floibanen","Fløibanen","Фунікулер на Fløyen · ~180 NOK туди-назад","Fløibanen"],
+          ["floyen","Fløyen","Вид на все місто","Fløyen"],
+          ["ulriken","Ulriken","Найвища гора Бергена, канатка","Ulriken643"]],
+  tip:"У Бергені дощ майже через день: беріть дощовики, парасолі вітер ламає.",
+  stays:"N6"},
+ {id:"day-7",ic:"🏁",tab:"Додому",date:"сб, 20 березня",title:"Повернення",
+  ret:true}
+];
+
+/* ======== STATE ======== */
+const S={ppl:6,ret:"B",out:0,back:0,stay:{N3:0,N4:0,N5:0,N6:0},fav:{}};
+try{const s=JSON.parse(localStorage.getItem("fjord-trip")||"{}");Object.assign(S,s);S.stay=Object.assign({N3:0,N4:0,N5:0,N6:0},s.stay||{})}catch(e){}
+const save=()=>{try{localStorage.setItem("fjord-trip",JSON.stringify(S))}catch(e){}};
+
+/* ======== HELPERS ======== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const eur=n=>Math.round(n).toLocaleString("uk-UA")+" €";
+const uah=n=>"₴"+Math.round(n).toLocaleString("uk-UA");
+const heartSvg='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 28S3 20.5 3 11.5A6.5 6.5 0 0 1 16 8a6.5 6.5 0 0 1 13 3.5C29 20.5 16 28 16 28z"/></svg>';
+const dt=d=>new Date(d+"T12:00").toLocaleDateString("uk-UA",{weekday:"short",day:"numeric",month:"short"});
+const cars=()=>S.ppl<=5?1:2;
+
+function photo(key,alt){
+  const p=P[key]; if(!p) return '<div class="noimg">Фото немає</div>';
+  return `<img src="${IMG[p[0]]}" referrerpolicy="no-referrer" alt="${esc(alt)}" loading="lazy"><a class="cred" href="${W(p[1])}" target="_blank" rel="noopener">фото · Commons</a>`;
+}
+function favBtn(id){return `<button class="heart" data-fav="${esc(id)}" aria-pressed="${!!S.fav[id]}" aria-label="В обране">${heartSvg}</button>`}
+
+/* ======== RENDER ======== */
+function renderHero(){
+  const k=["naeroy","stegastein","flamline","bryggen","voring"];
+  $("#hero").innerHTML=k.map(x=>`<figure>${photo(x,x)}</figure>`).join("");
+}
+function renderCats(){
+  $("#cats").innerHTML=DAYS.map((d,i)=>`<button class="cat" role="tab" data-go="${d.id}" aria-selected="${i===0}"><span class="ic">${d.ic}</span>${i===0?"День 0":"День "+i}</button>`).join("");
+}
+function flightCard(f,i,kind,chosen){
+  const per=S.ppl>=6&&f.p6?f.p6/6:f.p;
+  const from=f.fc?`${f.fc} (${f.f})`:f.f, to=f.tc?`${f.tc} (${f.t})`:f.t;
+  return `<button class="fl ${chosen?"chosen":""}" data-fl="${kind}:${i}">
+    <div class="route">${f.f}<i></i>${f.t}</div>
+    <div>${esc(from)} → ${esc(to)}</div>
+    <div class="when">${dt(f.d)} · ${f.dep}–${f.arr} · ${f.a}${f.early?" · раніше, 19.03":""}</div>
+    <div class="bottom"><span class="p">${Math.round(per)} € <small>/ людина</small></span><a href="${f.u}" target="_blank" rel="noopener">Kiwi ↗</a></div>
+  </button>`;
+}
+function stayCard(s,i,key){
+  const chosen=S.stay[key]===i, id="stay-"+s.id;
+  const img=s.photo?`<img src="${esc(s.photo)}" alt="${esc(s.name)}" loading="lazy"><a class="cred" href="${s.url}" target="_blank" rel="noopener">фото · Airbnb</a>`:'<div class="noimg">Фото на Airbnb ↗</div>';
+  const pp=s.priceUah*UAH/S.ppl;
+  return `<div class="card ${chosen?"chosen":""}">
+    <div class="ph">${img}${s.badge?`<span class="badge">${esc(s.badge)}</span>`:""}${favBtn(id)}</div>
+    <div class="meta">
+      <div class="l1"><span>${esc(s.place)}</span><span>★ ${esc(s.rating||"new")}</span></div>
+      <div class="muted">${esc(s.name)}</div>
+      <div class="muted">${s.bedrooms?s.bedrooms+" спальні":""}${s.beds?" · "+s.beds+" ліжок":""}${s.why?" · "+esc(s.why):""}</div>
+      <div class="price"><b>${eur(pp)}</b> <span class="muted">/ людина · ${uah(s.priceUah)} за ${s.nights||1} н.</span></div>
+      <div class="links"><a href="${s.url}" target="_blank" rel="noopener">Airbnb ↗</a><a href="${M(s.lat&&s.lng?s.lat+","+s.lng:s.place+" Norway")}" target="_blank" rel="noopener">Мапа ↗</a></div>
+      <button class="pick" data-stay="${key}:${i}">${chosen?"✓ Обрано":"Обрати"}</button>
+    </div></div>`;
+}
+function renderDays(){
+  $("#days").innerHTML=DAYS.map((d,i)=>{
+    let h=`<section class="day" id="${d.id}"><div class="day-head"><div>
+      <div class="eyebrow">${i===0?"День 0":"День "+i} · ${d.date}</div><h2>${esc(d.title)}</h2>
+      ${d.text?`<p>${esc(d.text)}</p>`:""}</div>
+      ${d.route?`<a class="btn" href="${d.route[0]}" target="_blank" rel="noopener">🗺 ${esc(d.route[1])}</a>`:""}</div>`;
+    if(d.drive) h+=`<div class="timeline"><span class="chip">🚗 ${esc(d.drive)}</span></div>`;
+    if(d.timeline) h+=`<div class="timeline">${d.timeline.map(t=>`<span class="chip"><b>${t[0]}</b> ${esc(t[1])}</span>`).join("")}</div>`;
+    if(d.flights){
+      const airports=[...new Set(FLIGHTS.out.map(f=>f.f))];
+      h+=`<h3 class="row-title">Рейси в Осло <small>натисни, щоб врахувати в бюджеті</small></h3>
+      <div class="filters" id="apf"><button aria-pressed="true" data-ap="all">Усі</button>${airports.map(a=>`<button aria-pressed="false" data-ap="${a}">${a}</button>`).join("")}</div>
+      <div class="flights" id="outList"></div>`;
+    }
+    if(d.places) h+=`<h3 class="row-title">Що бачимо</h3><div class="grid">${d.places.map(p=>`
+      <div class="card"><div class="ph">${photo(p[0],p[1])}${favBtn("pl-"+p[0])}</div>
+      <div class="meta"><div class="l1"><span>${esc(p[1])}</span></div><div class="muted">${esc(p[2])}</div>
+      <div class="links"><a href="${M(p[3])}" target="_blank" rel="noopener">Google Maps ↗</a></div></div></div>`).join("")}</div>`;
+    if(d.tip) h+=`<p class="note">💡 ${esc(d.tip)}</p>`;
+    if(d.car) h+=`<div class="info">
+      <div class="box"><h4>🚗 Авто</h4><p id="carTxt"></p></div>
+      <div class="box"><h4>Де орендувати</h4><ul>
+        <li><a href="https://www.discovercars.com/norway/oslo" target="_blank" rel="noopener">DiscoverCars, Осло</a></li>
+        <li><a href="https://www.rentalcars.com/" target="_blank" rel="noopener">Rentalcars</a>: впиши Осло, а повернення в Бергені, щоб побачити плату за one-way</li></ul></div>
+      <div class="box"><h4>Зима за кермом</h4><p>Шипована гума в прокаті стоїть стандартно. Зранку дивись vegvesen.no: перевали іноді пускають колоною.</p></div></div>`;
+    if(d.stays) h+=`<h3 class="row-title">Де ночуємо <small>${STAYS[d.stays].length?"дешевше, ніж у туристичних центрах":"шукаю варіанти…"}</small></h3><div class="grid" data-stays="${d.stays}"></div>`;
+    if(d.ret) h+=`<div class="day-head" style="margin-top:12px"><p id="retTxt"></p>
+      <a class="btn" id="retMap" target="_blank" rel="noopener"></a></div>
+      <div class="grid" style="margin-top:16px" id="retPlaces"></div>
+      <h3 class="row-title">Рейси додому</h3><div class="flights" id="backList"></div>
+      <div class="info">
+        <div class="box"><h4>🌡 Погода в березні</h4><div class="temps">${[["Осло",-4,5],["Флом",-2,6],["Гардангер",-1,6],["Берген",1,7]].map(t=>`<div style="height:${(t[2]+5)*6}px"><span>${t[1]}…+${t[2]}°</span></div>`).join("")}</div>
+          <p style="display:flex;justify-content:space-between;margin-top:4px;font-size:12px"><span>Осло</span><span>Флом</span><span>Гардангер</span><span>Берген</span></p></div>
+        <div class="box"><h4>🧥 Взяти</h4><ul><li>Мембрану й термобілизну</li><li>Шипи на взуття, бо стежки в льоді</li><li>Дощовик для Бергена</li></ul></div>
+        <div class="box"><h4>🍝 Їжа</h4><p>Готуємо самі в будинках (Rema 1000, Kiwi, Coop Extra). Кафе коштує 25–40 € за обід, алкоголь бери в duty free.</p></div></div>`;
+    return h+"</section>";
+  }).join("");
+  renderFlights(); renderStays(); renderReturn(); renderCar();
+}
+function renderFlights(ap){
+  ap=ap||document.querySelector("#apf [aria-pressed=true]")?.dataset.ap||"all";
+  $("#outList").innerHTML=FLIGHTS.out.map((f,i)=>ap==="all"||f.f===ap?flightCard(f,i,"out",S.out===i):"").join("");
+}
+function renderStays(){
+  document.querySelectorAll("[data-stays]").forEach(g=>{
+    const k=g.dataset.stays,list=STAYS[k];
+    g.innerHTML=list.length?list.map((s,i)=>stayCard(s,i,k)).join(""):'<p class="note">Житло ще шукається.</p>';
+  });
+}
+function backList(){return S.ret==="A"?FLIGHTS.backBergen:FLIGHTS.backOslo}
+function renderReturn(){
+  const A=S.ret==="A";
+  $("#retTxt").textContent=A
+    ?"Здаємо авто в аеропорту Бергена. 20.03 прямих рейсів у Польщу немає, тож або ще одна ніч у Бергені й виліт 21.03 зранку, або виліт 19.03 увечері. Дорожче: рейс 80–120 €, плюс one-way плата за авто й ще одна ніч."
+    :"7 годин назад до Осло через плато Гардангервідда (Rv7) або E16. Авто здаємо в Осло, ночуємо там, а 21.03 летимо з Торпа. Це дешевший варіант.";
+  const m=$("#retMap"); m.href=A?M("Bergen Airport Flesland"):R("Bergen","Oslo",["Hardangervidda","Geilo"]); m.textContent=A?"🗺 Аеропорт Бергена":"🗺 Берген → Осло через Гардангервідду";
+  $("#retPlaces").innerHTML=A?"":`<div class="card"><div class="ph">${photo("vidda","Hardangervidda")}${favBtn("pl-vidda")}</div><div class="meta"><div class="l1"><span>Гардангервідда</span></div><div class="muted">Найбільше плато Європи, сніг до горизонту</div><div class="links"><a href="${M("Hardangervidda")}" target="_blank" rel="noopener">Google Maps ↗</a></div></div></div>`;
+  const L=backList(); if(S.back>=L.length) S.back=0;
+  $("#backList").innerHTML=L.map((f,i)=>flightCard(f,i,"back",S.back===i)).join("");
+  $("#retB").setAttribute("aria-pressed",!A); $("#retA").setAttribute("aria-pressed",A);
+}
+function renderCar(){
+  const c=cars(); const el=$("#carTxt"); if(!el) return;
+  el.textContent=`${S.ppl} людей → ${c} ${c===1?"авто":"авто"}${c===2?" (6+ людей з валізами в одне не влізуть)":""}. Беремо в Осло. Орієнтовно 60–90 € за день за кожне.${S.ret==="A"?" Повернення в Бергені: плюс one-way плата, ~150–500 € за авто.":""}`;
+}
+
+/* ======== BUDGET ======== */
+function budget(){
+  const n=S.ppl,c=cars(),A=S.ret==="A";
+  const fo=FLIGHTS.out[S.out]||FLIGHTS.out[0], fb=backList()[S.back]||backList()[0];
+  const fp=f=>n>=6&&f.p6?f.p6/6:f.p;
+  const torp=(fo.t==="TRF"?350:0)+(!A&&fb.f==="TRF"?350:0);
+  const days=A?6:5, km=A?750:1250;
+  const car=(c*(days*75+(A?250:0)+km*0.14+(A?35:60)))/n;
+  let st=0; ["N3","N4","N5","N6"].forEach(k=>{const s=STAYS[k][S.stay[k]]; if(s) st+=s.priceUah*UAH});
+  if(A){const s=STAYS.N6[S.stay.N6]; if(s) st+=s.priceUah*UAH}
+  st/=n;
+  const fun=(530+610+180)*NOK, local=(torp+260)*NOK, food=30*(A?9:8);
+  const rows=[["✈ Рейс в Осло",fp(fo)],["✈ Рейс додому",fp(fb)],["🚗 Авто, пальне, платні дороги",car],["🏠 Житло ("+(A?5:4)+" ночі)",st],
+    ["🚂 Flåmsbana, круїз, фунікулер",fun*1],["🚌 Торп-автобус і транспорт Осло",local],["🍝 Їжа",food]];
+  const tot=rows.reduce((a,r)=>a+r[1],0);
+  $("#tot").innerHTML=`${eur(tot)} <small>/ людина</small>`;
+  $("#why").textContent=`${n} людей · ${c} авто · ${A?"летимо з Бергена":"назад через Осло"} · без житла в Осло`;
+  $("#bt").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${eur(r[1])}</td></tr>`).join("")+`<tr><td>Разом</td><td>${eur(tot)}</td></tr>`;
+  $("#bnote").textContent="Рейси й житло ті, що ти обрав на сторінці. Авто: ~75 € за день за машину, пальне ~0,14 €/км. Ціни на 15.11.2026.";
+  $("#whoLabel").textContent=n+" людей"; $("#ppl").textContent=n;
+  $("#minus").disabled=n<=3; $("#plus").disabled=n>=9;
+}
+
+/* ======== EVENTS ======== */
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button,a"); if(!t) return;
+  if(t.tagName==="A") return;
+  if(t.dataset.fav){S.fav[t.dataset.fav]=!S.fav[t.dataset.fav];t.setAttribute("aria-pressed",S.fav[t.dataset.fav]);save();return}
+  if(t.dataset.fl){const[k,i]=t.dataset.fl.split(":");S[k]=+i;save();k==="out"?renderFlights():renderReturn();budget();return}
+  if(t.dataset.stay){const[k,i]=t.dataset.stay.split(":");S.stay[k]=+i;save();renderStays();budget();return}
+  if(t.dataset.ap){document.querySelectorAll("#apf button").forEach(b=>b.setAttribute("aria-pressed",b===t));renderFlights(t.dataset.ap);return}
+  if(t.dataset.go){go(t.dataset.go,true);return}
+  if(t.id==="minus"||t.id==="plus"){S.ppl=Math.min(9,Math.max(3,S.ppl+(t.id==="plus"?1:-1)));save();renderStays();renderFlights();renderReturn();renderCar();budget();return}
+  if(t.id==="retA"||t.id==="retB"){S.ret=t.id==="retA"?"A":"B";S.back=0;save();renderReturn();renderCar();budget();return}
+  if(t.id==="themeBtn"){const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark";return}
+});
+function go(id,push){
+  const el=document.getElementById(id); if(!el) return;
+  el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});
+  if(push) history.replaceState(null,"","#"+id);
+  setSel(id);
+}
+function setSel(id){document.querySelectorAll(".cat").forEach(b=>{b.setAttribute("aria-selected",b.dataset.go===id); if(b.dataset.go===id) b.scrollIntoView({block:"nearest",inline:"nearest"})})}
+const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting) setSel(en.target.id)})},{rootMargin:"-45% 0px -50% 0px"});
+
+/* ======== BOOT ======== */
+renderHero(); renderCats(); renderDays(); budget();
+document.querySelectorAll("section.day").forEach(s=>io.observe(s));
+if(location.hash) setTimeout(()=>go(location.hash.slice(1)),50);
+window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
+</script>
+
+</body>
+</html>
