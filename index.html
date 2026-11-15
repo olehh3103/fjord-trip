@@ -182,7 +182,7 @@ footer a{color:var(--muted)}
 .mapwrap{margin-top:26px}
 .map-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .map-head h2{font-size:22px}
-#map.dim .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9)}
+#map.dim:not(.sat) .leaflet-tile-pane{filter:brightness(.72) contrast(1.05) saturate(.85)}
 #map{height:440px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);z-index:0}
 .leaflet-container{font-family:var(--font);background:var(--surface)}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--card);color:var(--fg);box-shadow:var(--shadow-strong)}
@@ -231,7 +231,9 @@ footer a{color:var(--muted)}
     <span class="chip warn">Язик троля взимку закритий: лід</span>
   </div>
   <section class="mapwrap" id="map-sec" aria-label="Мапа маршруту">
-    <div class="map-head"><h2>Маршрут на мапі</h2><div class="filters" id="mapf"></div></div>
+    <div class="map-head"><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><h2>Маршрут на мапі</h2>
+      <div class="seg" role="group" aria-label="Вид мапи"><button data-tiles="topo" aria-pressed="true">Мапа</button><button data-tiles="sat" aria-pressed="false">Супутник</button></div></div>
+      <div class="filters" id="mapf"></div></div>
     <div id="map"></div>
     <div class="legend" id="legend"></div>
     <p class="note" id="mapnote" hidden></p>
@@ -583,6 +585,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.bp){document.querySelectorAll("#bpf button").forEach(b=>b.setAttribute("aria-pressed",b===t));renderReturn();return}
   if(t.dataset.go){go(t.dataset.go,true);return}
   if(t.dataset.mf){focusMap(t.dataset.mf);return}
+  if(t.dataset.tiles){setTiles(t.dataset.tiles);return}
   if(t.dataset.mapday){document.getElementById("map-sec").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});setTimeout(()=>focusMap(t.dataset.mapday),350);return}
   if(t.id==="minus"||t.id==="plus"){S.ppl=Math.min(9,Math.max(3,S.ppl+(t.id==="plus"?1:-1)));save();renderStays();renderFlights();renderReturn();renderCar();budget();return}
   if(t.id==="retA"||t.id==="retB"){S.ret=t.id==="retA"?"A":"B";S.back=0;save();renderReturn();renderCar();budget();return}
@@ -598,7 +601,9 @@ function setSel(id){document.querySelectorAll(".cat").forEach(b=>{b.setAttribute
 const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting) setSel(en.target.id)})},{rootMargin:"-45% 0px -50% 0px"});
 
 /* ======== MAP ======== */
-let map=null,mapLayer=null,tilesFailed=false,mapFitted=false;
+let map=null,mapLayer=null,tilesFailed=false,mapFitted=false;const TILES={};
+function setTiles(k){if(!map||TILES.cur===k) return;map.removeLayer(TILES[TILES.cur]);TILES[k].addTo(map);TILES.cur=k;
+  $("#map").classList.toggle("sat",k==="sat");document.querySelectorAll("[data-tiles]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tiles===k))}
 const dayNo=id=>+id.split("-")[1];
 function popup(img,title,sub,links){return `${img?`<img src="${esc(img)}" alt="">`:""}<b>${esc(title)}</b>${sub?`<span>${esc(sub)}</span>`:""}${links}`}
 function initMap(){
@@ -606,9 +611,13 @@ function initMap(){
   if(!window.L){note.hidden=false;note.textContent="Мапа не завантажилась. Відкрий сайт olehh3103.github.io/fjord-trip.";return}
   map=L.map("map",{scrollWheelZoom:false,zoomControl:true});
   const dark=document.documentElement.dataset.theme?document.documentElement.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
+  const esri=s=>`https://server.arcgisonline.com/ArcGIS/rest/services/${s}/MapServer/tile/{z}/{y}/{x}`;
+  const attr='Tiles &copy; <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a> — Esri, HERE, Garmin, OpenStreetMap, USGS';
+  TILES.topo=L.tileLayer(esri("World_Topo_Map"),{maxZoom:18,attribution:attr});
+  TILES.sat=L.tileLayer(esri("World_Imagery"),{maxZoom:18,attribution:attr});
+  const tl=TILES.topo.addTo(map); TILES.cur="topo";
   if(dark) $("#map").classList.add("dim");
-  const tl=L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,
-    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(map);
+  TILES.sat.on("tileerror",()=>tl.fire("tileerror"));
   tl.on("tileerror",()=>{if(tilesFailed) return;tilesFailed=true;note.hidden=false;
     note.innerHTML='Підкладка мапи тут не вантажиться. Повна мапа є на сайті: <a href="https://olehh3103.github.io/fjord-trip/#map-sec" target="_blank" rel="noopener">olehh3103.github.io/fjord-trip</a>';});
   mapLayer=L.layerGroup().addTo(map);
