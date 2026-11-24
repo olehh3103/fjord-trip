@@ -198,6 +198,27 @@ footer a{color:var(--muted)}
 .tk .leg{display:grid;grid-template-columns:auto 1fr auto;gap:2px 10px;font-size:13px;font-variant-numeric:tabular-nums;align-items:baseline}
 .tk .leg span:nth-child(2){color:var(--muted);min-width:0}
 .tk .leg a{color:var(--fg);font-weight:600;white-space:nowrap}
+.cmb{display:flex;flex-direction:column;gap:10px;margin:0 0 14px;min-width:0}
+.cmb-row{display:flex;gap:8px 12px;align-items:center;flex-wrap:wrap;min-width:0}
+.cmb-row .filters{margin:0}
+.cmb-l{font-size:13px;font-weight:700;min-width:118px}
+.cmb-chk{font-size:13px;color:var(--muted);display:inline-flex;gap:6px;align-items:center}
+.filters button small{opacity:.7;font-weight:500}
+.dstrip{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;max-width:100%;flex:1 1 300px;min-width:0;-webkit-overflow-scrolling:touch}
+.dstrip button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:10px;padding:6px 8px;min-width:54px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-variant-numeric:tabular-nums}
+.dstrip button b{font-size:13px}
+.dstrip button span{color:var(--muted);font-size:11px}
+.dstrip button.cheap span{color:#2e9e6a;font-weight:700}
+.dstrip button[aria-pressed="true"]{border-color:var(--fg);background:var(--fg);color:var(--bg)}
+.dstrip button[aria-pressed="true"] span{color:var(--bg)}
+.dstrip button:disabled{opacity:.35}
+.tk .pick2{margin-top:2px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;align-self:flex-start}
+.tk.top .pick2{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.tix-empty{color:var(--muted);font-size:14px;padding:6px 0}
+.chosen-fl{border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;background:var(--card);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-top:12px;font-variant-numeric:tabular-nums}
+.chosen-fl b{font-size:16px}
+.chosen-fl .muted{color:var(--muted);font-size:13px}
+.chosen-fl a{font-size:13px}
 .tk .tag{display:inline-block;font-size:11px;font-weight:700;background:var(--accent);color:#fff;border-radius:999px;padding:2px 8px;width:max-content}
 #map.dim:not(.sat) .leaflet-tile-pane{filter:brightness(.72) contrast(1.05) saturate(.85)}
 #map{height:440px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);z-index:0}
@@ -223,7 +244,7 @@ footer a{color:var(--muted)}
     <div class="logo"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M2 26 12 9l5 8 4-5 9 14z"/><path fill="var(--bg)" d="m12 9 2.6 4.2L12 12l-2 2.2z"/></svg><span>fjord trip</span></div>
     <div class="pill" role="group" aria-label="Параметри поїздки">
       <div><small>Куди</small><span>Осло → фьорди → Берген</span></div>
-      <div><small>Коли</small><span>13–20 березня 2027</span></div>
+      <div><small>Коли</small><span id="whenPill">березень 2027</span></div>
       <div><div><small>Хто</small><span id="whoLabel">6 людей</span></div>
         <div class="stepper"><button id="minus" aria-label="Менше людей">−</button><b id="ppl">6</b><button id="plus" aria-label="Більше людей">+</button></div></div>
     </div>
@@ -253,40 +274,16 @@ footer a{color:var(--muted)}
       <a class="btn primary" href="dates.html">🗓 Обрати свої дні</a></div>
     <div class="when-best" id="whenBest">Завантажую, хто коли може…</div>
     <div id="whenTL"></div>
-    <h3 class="tix-h">✈️ Найдешевші квитки на 11–25 березня</h3>
-    <p class="tix-note">Ці дні зараз нікому не заважають. Тільки Ґардермуен (OSL), без Торпа. Ціна за одну людину в обидва боки, лише рюкзак під сидіння. Ціни Kiwi.com на 24 листопада 2026, вони зміняться. Назад до Кракова й Варшави дорого (~95 €), тому вигідніше летіти через Гданськ.</p>
-    <div class="tix">
-      <div class="tk top"><span class="tag">Найдешевше</span>
-        <div class="hd"><b>Гданськ ⇄ Осло</b><span class="tot">51 €</span></div>
-        <div class="sub2">7 ночей · 15–22 березня</div>
-        <div class="leg"><span>→ 15.03</span><span>GDN 06:00 → OSL 07:25 · Wizz Air</span><a href="https://kiwi.com/u/6u3rnsu9px" target="_blank" rel="noopener">20 € ↗</a><span>← 22.03</span><span>OSL 12:40 → GDN 14:15 · Wizz Air</span><a href="https://kiwi.com/u/4jgpm9cr9n" target="_blank" rel="noopener">31 € ↗</a></div>
-      </div>
-      <div class="tk">
-        <div class="hd"><b>Гданськ ⇄ Осло</b><span class="tot">52 €</span></div>
-        <div class="sub2">6 ночей · 16–22 березня</div>
-        <div class="leg"><span>→ 16.03</span><span>GDN 12:05 → OSL 13:35 · Norwegian</span><a href="https://kiwi.com/u/825bmcr8gy" target="_blank" rel="noopener">21 € ↗</a><span>← 22.03</span><span>OSL 12:40 → GDN 14:15 · Wizz Air</span><a href="https://kiwi.com/u/4jgpm9cr9n" target="_blank" rel="noopener">31 € ↗</a></div>
-      </div>
-      <div class="tk">
-        <div class="hd"><b>Краків → Осло → Гданськ</b><span class="tot">52 €</span></div>
-        <div class="sub2">6 ночей · 16–22 березня · назад в інше місто</div>
-        <div class="leg"><span>→ 16.03</span><span>KRK 12:45 → OSL 14:50 · Norwegian</span><a href="https://kiwi.com/u/m3y9c3s9kj" target="_blank" rel="noopener">21 € ↗</a><span>← 22.03</span><span>OSL 12:40 → GDN 14:15 · Wizz Air</span><a href="https://kiwi.com/u/4jgpm9cr9n" target="_blank" rel="noopener">31 € ↗</a></div>
-      </div>
-      <div class="tk">
-        <div class="hd"><b>Гданськ ⇄ Осло</b><span class="tot">57 €</span></div>
-        <div class="sub2">7 ночей · 14–21 березня</div>
-        <div class="leg"><span>→ 14.03</span><span>GDN 06:00 → OSL 07:40 · Wizz Air</span><a href="https://kiwi.com/u/tcf6jjh48f" target="_blank" rel="noopener">20 € ↗</a><span>← 21.03</span><span>OSL 17:55 → GDN 19:30 · Wizz Air</span><a href="https://kiwi.com/u/wgb5dwj73z" target="_blank" rel="noopener">37 € ↗</a></div>
-      </div>
-      <div class="tk">
-        <div class="hd"><b>Краків ⇄ Осло</b><span class="tot">115 €</span></div>
-        <div class="sub2">6 ночей · 16–22 березня</div>
-        <div class="leg"><span>→ 16.03</span><span>KRK 12:45 → OSL 14:50 · Norwegian</span><a href="https://kiwi.com/u/m3y9c3s9kj" target="_blank" rel="noopener">21 € ↗</a><span>← 22.03</span><span>OSL 15:50 → KRK 18:05 · Wizz Air</span><a href="https://kiwi.com/u/nrjkm5s9gu" target="_blank" rel="noopener">94 € ↗</a></div>
-      </div>
-      <div class="tk">
-        <div class="hd"><b>Варшава ⇄ Осло</b><span class="tot">127 €</span></div>
-        <div class="sub2">6 ночей · 12–18 березня</div>
-        <div class="leg"><span>→ 12.03</span><span>WAW 12:05 → OSL 14:00 · Norwegian</span><a href="https://kiwi.com/u/sup7zhdkzg" target="_blank" rel="noopener">31 € ↗</a><span>← 18.03</span><span>OSL 09:35 → WAW 11:25 · Norwegian</span><a href="https://kiwi.com/u/bqbv33xxvq" target="_blank" rel="noopener">96 € ↗</a></div>
-      </div>
+    <h3 class="tix-h">✈️ Квитки: найкращі комбінації</h3>
+    <p class="tix-note" id="flNote"></p>
+    <div class="cmb">
+      <div class="cmb-row"><span class="cmb-l">Виліт з</span><div class="filters" id="fromF"></div></div>
+      <div class="cmb-row"><span class="cmb-l">Повернення в</span><div class="filters" id="toF"></div></div>
+      <div class="cmb-row"><span class="cmb-l">Ночей у Норвегії</span><div class="filters" id="nightsF"></div>
+        <label class="cmb-chk"><input type="checkbox" id="onlyFree"> лише дні, коли всі можуть</label></div>
+      <div class="cmb-row"><span class="cmb-l">День вильоту</span><div class="dstrip" id="dateF"></div></div>
     </div>
+    <div class="tix" id="combos"></div>
   </section>
   <section class="mapwrap" id="map-sec" aria-label="Мапа маршруту">
     <div class="map-head"><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><h2>Маршрут на мапі</h2>
@@ -358,45 +355,19 @@ const P={ /* local photos, each with its Commons source */
  vidda:["hardangervidda","Hardangervidda.jpg"]
 };
 
-const FLIGHTS={
- out:[
-  {f:"SZZ",fc:"Щецин",t:"OSL",d:"2027-03-12",dep:"10:30",arr:"12:05",a:"Wizz Air",p:16,p6:98,u:"https://kiwi.com/u/frcjcv"},
-  {f:"GDN",fc:"Гданськ",t:"OSL",d:"2027-03-14",dep:"06:00",arr:"07:40",a:"Wizz Air",p:25,u:"https://kiwi.com/u/zcu5dw",late:true},
-  {f:"GDN",fc:"Гданськ",t:"OSL",d:"2027-03-13",dep:"15:45",arr:"17:25",a:"Wizz Air",p:32,u:"https://kiwi.com/u/829wgg"},
-  {f:"KRK",fc:"Краків",t:"OSL",d:"2027-03-12",dep:"21:50",arr:"23:55",a:"Norwegian",p:33,u:"https://kiwi.com/u/mhxc5w"},
-  {f:"GDN",fc:"Гданськ",t:"OSL",d:"2027-03-12",dep:"12:05",arr:"13:35",a:"Norwegian",p:33,u:"https://kiwi.com/u/u8tr4x"},
-  {f:"GDN",fc:"Гданськ",t:"TRF",d:"2027-03-13",dep:"12:05",arr:"13:40",a:"Ryanair",p:17,p6:102,u:"https://kiwi.com/u/w4r8g3s"},
-  {f:"KRK",fc:"Краків",t:"TRF",d:"2027-03-12",dep:"13:55",arr:"16:05",a:"Ryanair",p:19,p6:115,u:"https://kiwi.com/u/c2z2455"},
-  {f:"KRK",fc:"Краків",t:"TRF",d:"2027-03-13",dep:"11:20",arr:"13:30",a:"Ryanair",p:19,p6:144,u:"https://kiwi.com/u/bybrsfm"},
-  {f:"POZ",fc:"Познань",t:"TRF",d:"2027-03-13",dep:"08:05",arr:"09:50",a:"Ryanair",p:21,p6:128,u:"https://kiwi.com/u/nmxqxz"},
-  {f:"KRK",fc:"Краків",t:"OSL",d:"2027-03-12",dep:"12:55",arr:"15:15",a:"Wizz Air",p:41,u:"https://kiwi.com/u/h5d59gu"},
-  {f:"WAW",fc:"Варшава",t:"OSL",d:"2027-03-12",dep:"12:05",arr:"14:00",a:"Norwegian",p:45,u:"https://kiwi.com/u/dd9nws6"}
- ],
- backOslo:[
-  {f:"TRF",t:"POZ",tc:"Познань",d:"2027-03-21",dep:"16:15",arr:"17:55",a:"Ryanair",p:28,p6:173,u:"https://kiwi.com/u/rm7v68"},
-  {f:"OSL",t:"SZZ",tc:"Щецин",d:"2027-03-22",dep:"08:15",arr:"09:55",a:"Wizz Air",p:52,u:"https://kiwi.com/u/gwgfks"},
-  {f:"TRF",t:"GDN",tc:"Гданськ",d:"2027-03-21",dep:"19:40",arr:"21:10",a:"Ryanair",p:38,p6:229,u:"https://kiwi.com/u/ghpg5wv"},
-  {f:"TRF",t:"KRK",tc:"Краків",d:"2027-03-21",dep:"14:45",arr:"16:50",a:"Ryanair",p:40,p6:240,u:"https://kiwi.com/u/zkzzjgw"},
-  {f:"OSL",t:"GDN",tc:"Гданськ",d:"2027-03-22",dep:"12:40",arr:"14:15",a:"Wizz Air",p:59,u:"https://kiwi.com/u/kwhphdc"},
-  {f:"OSL",t:"GDN",tc:"Гданськ",d:"2027-03-21",dep:"17:55",arr:"19:30",a:"Wizz Air",p:73,u:"https://kiwi.com/u/x4rdwr"},
-  {f:"OSL",t:"KRK",tc:"Краків",d:"2027-03-22",dep:"10:00",arr:"12:05",a:"Norwegian",p:110,u:"https://kiwi.com/u/b36sdhqd"},
-  {f:"OSL",t:"KRK",tc:"Краків",d:"2027-03-21",dep:"17:55",arr:"20:00",a:"Norwegian",p:117,u:"https://kiwi.com/u/65nyuk8"},
-  {f:"OSL",t:"WAW",tc:"Варшава",d:"2027-03-22",dep:"09:35",arr:"11:25",a:"Norwegian",p:108,u:"https://kiwi.com/u/63z38d"}
- ],
- backBergen:[
-  {f:"BGO",t:"KRK",tc:"Краків",d:"2027-03-21",dep:"07:05",arr:"09:25",a:"Norwegian",p:108,p6:637,u:"https://kiwi.com/u/buxwtc"},
-  {f:"BGO",t:"GDN",tc:"Гданськ",d:"2027-03-21",dep:"08:55",arr:"10:40",a:"Wizz Air",p:83,p6:518,u:"https://kiwi.com/u/m7jm273"},
-  {f:"BGO",t:"KRK",tc:"Краків",d:"2027-03-21",dep:"21:10",arr:"23:30",a:"Wizz Air",p:121,p6:741,u:"https://kiwi.com/u/cgw4fgy"},
-  {f:"BGO",t:"KRK",tc:"Краків",d:"2027-03-19",dep:"21:10",arr:"23:30",a:"Wizz Air",p:73,p6:493,u:"https://kiwi.com/u/c2xjucm",early:true}
- ]
-};
+/* FL: прямі рейси з Kiwi.com, ціна за 1 людину, лише рюкзак під сидіння. */
+const FL=/*FL*/[{"f":"OSL","t":"KRK","d":"2027-03-11","dep":"15:50","arr":"18:05","a":"Wizz Air","p":26,"u":"https://kiwi.com/u/6tftryk458"},{"f":"KRK","t":"OSL","d":"2027-03-11","dep":"12:55","arr":"15:15","a":"Wizz Air","p":31,"u":"https://kiwi.com/u/jg3uhz4ht7"},{"f":"GDN","t":"OSL","d":"2027-03-11","dep":"12:05","arr":"13:35","a":"Norwegian","p":32,"u":"https://kiwi.com/u/u769wpk6g5"},{"f":"WAW","t":"OSL","d":"2027-03-11","dep":"12:05","arr":"14:00","a":"Norwegian","p":38,"u":"https://kiwi.com/u/r69xbvuftb"},{"f":"GDN","t":"OSL","d":"2027-03-11","dep":"15:45","arr":"17:25","a":"Wizz Air","p":38,"u":"https://kiwi.com/u/j3cuu4rj2h"},{"f":"KRK","t":"OSL","d":"2027-03-11","dep":"12:45","arr":"14:50","a":"Norwegian","p":39,"u":"https://kiwi.com/u/hku57wv8ns"},{"f":"OSL","t":"GDN","d":"2027-03-11","dep":"10:00","arr":"11:25","a":"Norwegian","p":40,"u":"https://kiwi.com/u/h2nq83gud4"},{"f":"OSL","t":"GDN","d":"2027-03-11","dep":"18:00","arr":"19:35","a":"Wizz Air","p":41,"u":"https://kiwi.com/u/x4y7nyyrmh"},{"f":"OSL","t":"WAW","d":"2027-03-11","dep":"09:35","arr":"11:25","a":"Norwegian","p":55,"u":"https://kiwi.com/u/95py9vdzrp"},{"f":"OSL","t":"KRK","d":"2027-03-11","dep":"10:00","arr":"12:05","a":"Norwegian","p":56,"u":"https://kiwi.com/u/suzngfz82c"},{"f":"WAW","t":"OSL","d":"2027-03-11","dep":"07:40","arr":"09:50","a":"LOT","p":73,"u":"https://kiwi.com/u/8j944svvyt"},{"f":"WAW","t":"OSL","d":"2027-03-11","dep":"16:45","arr":"18:55","a":"LOT","p":73,"u":"https://kiwi.com/u/n2w6wn45wz"},{"f":"OSL","t":"WAW","d":"2027-03-11","dep":"19:45","arr":"21:50","a":"LOT","p":105,"u":"https://kiwi.com/u/2rs4nch98r"},{"f":"OSL","t":"WAW","d":"2027-03-11","dep":"10:40","arr":"12:40","a":"LOT","p":127,"u":"https://kiwi.com/u/dwy7ncgsrg"},{"f":"KRK","t":"OSL","d":"2027-03-12","dep":"21:50","arr":"23:55","a":"Norwegian","p":22,"u":"https://kiwi.com/u/v9mbh5zgm3"},{"f":"OSL","t":"GDN","d":"2027-03-12","dep":"12:40","arr":"14:15","a":"Wizz Air","p":24,"u":"https://kiwi.com/u/ruszvnwzsh"},{"f":"GDN","t":"OSL","d":"2027-03-12","dep":"12:05","arr":"13:35","a":"Norwegian","p":28,"u":"https://kiwi.com/u/p7zm3frj8h"},{"f":"GDN","t":"OSL","d":"2027-03-12","dep":"06:00","arr":"07:40","a":"Wizz Air","p":31,"u":"https://kiwi.com/u/v68ywncbuf"},{"f":"WAW","t":"OSL","d":"2027-03-12","dep":"12:05","arr":"14:00","a":"Norwegian","p":31,"u":"https://kiwi.com/u/s778j7w2xb"},{"f":"OSL","t":"KRK","d":"2027-03-12","dep":"15:50","arr":"18:05","a":"Wizz Air","p":33,"u":"https://kiwi.com/u/vbd5yf6mc8"},{"f":"KRK","t":"OSL","d":"2027-03-12","dep":"12:45","arr":"14:50","a":"Norwegian","p":39,"u":"https://kiwi.com/u/fkphpzktpj"},{"f":"KRK","t":"OSL","d":"2027-03-12","dep":"12:55","arr":"15:15","a":"Wizz Air","p":40,"u":"https://kiwi.com/u/knf89mvbq4"},{"f":"OSL","t":"GDN","d":"2027-03-12","dep":"10:00","arr":"11:25","a":"Norwegian","p":48,"u":"https://kiwi.com/u/jgvjbc6m25"},{"f":"OSL","t":"KRK","d":"2027-03-12","dep":"10:00","arr":"12:05","a":"Norwegian","p":56,"u":"https://kiwi.com/u/qdjt84pgdq"},{"f":"OSL","t":"KRK","d":"2027-03-12","dep":"19:05","arr":"21:10","a":"Norwegian","p":57,"u":"https://kiwi.com/u/zwgqbk4kyw"},{"f":"OSL","t":"WAW","d":"2027-03-12","dep":"09:35","arr":"11:25","a":"Norwegian","p":67,"u":"https://kiwi.com/u/ktzndgwgf9"},{"f":"WAW","t":"OSL","d":"2027-03-12","dep":"07:40","arr":"09:50","a":"LOT","p":73,"u":"https://kiwi.com/u/uw2cyuj2xr"},{"f":"WAW","t":"OSL","d":"2027-03-12","dep":"16:45","arr":"18:55","a":"LOT","p":73,"u":"https://kiwi.com/u/t3q43qz74m"},{"f":"OSL","t":"WAW","d":"2027-03-12","dep":"10:40","arr":"12:40","a":"LOT","p":124,"u":"https://kiwi.com/u/frs9wn29vn"},{"f":"OSL","t":"WAW","d":"2027-03-12","dep":"19:45","arr":"21:50","a":"LOT","p":124,"u":"https://kiwi.com/u/6tvsd9q5td"},{"f":"GDN","t":"OSL","d":"2027-03-13","dep":"15:45","arr":"17:25","a":"Wizz Air","p":19,"u":"https://kiwi.com/u/g82kn5zcct"},{"f":"OSL","t":"GDN","d":"2027-03-13","dep":"18:00","arr":"19:35","a":"Wizz Air","p":26,"u":"https://kiwi.com/u/wprqsxs9sq"},{"f":"WAW","t":"OSL","d":"2027-03-13","dep":"07:40","arr":"09:50","a":"LOT","p":89,"u":"https://kiwi.com/u/gknrv68qpt"},{"f":"OSL","t":"WAW","d":"2027-03-13","dep":"10:40","arr":"12:40","a":"LOT","p":119,"u":"https://kiwi.com/u/bhc6zvp7ju"},{"f":"GDN","t":"OSL","d":"2027-03-14","dep":"06:00","arr":"07:40","a":"Wizz Air","p":20,"u":"https://kiwi.com/u/uvxn35c8hf"},{"f":"OSL","t":"GDN","d":"2027-03-14","dep":"08:15","arr":"09:50","a":"Wizz Air","p":24,"u":"https://kiwi.com/u/9xz9brw4fw"},{"f":"BGO","t":"GDN","d":"2027-03-14","dep":"08:55","arr":"10:40","a":"Wizz Air","p":26,"u":"https://kiwi.com/u/6mc9gmhgpv"},{"f":"OSL","t":"KRK","d":"2027-03-14","dep":"08:15","arr":"10:20","a":"Norwegian","p":30,"u":"https://kiwi.com/u/fbhdvz46gz"},{"f":"OSL","t":"GDN","d":"2027-03-14","dep":"08:30","arr":"09:55","a":"Norwegian","p":30,"u":"https://kiwi.com/u/pzyq945yff"},{"f":"OSL","t":"WAW","d":"2027-03-14","dep":"11:55","arr":"13:45","a":"Norwegian","p":30,"u":"https://kiwi.com/u/hyc27yb5wt"},{"f":"OSL","t":"KRK","d":"2027-03-14","dep":"17:55","arr":"20:00","a":"Norwegian","p":30,"u":"https://kiwi.com/u/5dcupr56sw"},{"f":"OSL","t":"GDN","d":"2027-03-14","dep":"19:40","arr":"21:05","a":"Norwegian","p":30,"u":"https://kiwi.com/u/dtfbhkx66u"},{"f":"BGO","t":"KRK","d":"2027-03-14","dep":"21:10","arr":"23:30","a":"Wizz Air","p":31,"u":"https://kiwi.com/u/r5cwv9vfxv"},{"f":"OSL","t":"KRK","d":"2027-03-14","dep":"15:50","arr":"18:05","a":"Wizz Air","p":33,"u":"https://kiwi.com/u/b4zsh2sw4g"},{"f":"BGO","t":"KRK","d":"2027-03-14","dep":"07:05","arr":"09:25","a":"Norwegian","p":42,"u":"https://kiwi.com/u/gyck3h5g9f"},{"f":"GDN","t":"OSL","d":"2027-03-14","dep":"21:45","arr":"23:15","a":"Norwegian","p":47,"u":"https://kiwi.com/u/rn5r3gvggw"},{"f":"KRK","t":"OSL","d":"2027-03-14","dep":"12:55","arr":"15:15","a":"Wizz Air","p":52,"u":"https://kiwi.com/u/jhv2g6p5pv"},{"f":"GDN","t":"OSL","d":"2027-03-14","dep":"10:35","arr":"12:05","a":"Norwegian","p":64,"u":"https://kiwi.com/u/5mwg3w49df"},{"f":"OSL","t":"WAW","d":"2027-03-14","dep":"19:45","arr":"21:50","a":"LOT","p":65,"u":"https://kiwi.com/u/mcnff29vxg"},{"f":"KRK","t":"OSL","d":"2027-03-14","dep":"20:40","arr":"22:45","a":"Norwegian","p":91,"u":"https://kiwi.com/u/8rxkc4u5tn"},{"f":"WAW","t":"OSL","d":"2027-03-14","dep":"14:25","arr":"16:20","a":"Norwegian","p":95,"u":"https://kiwi.com/u/5h6z4uq93y"},{"f":"KRK","t":"OSL","d":"2027-03-14","dep":"11:00","arr":"13:05","a":"Norwegian","p":110,"u":"https://kiwi.com/u/73dq6hbz3k"},{"f":"WAW","t":"OSL","d":"2027-03-14","dep":"16:45","arr":"18:55","a":"LOT","p":140,"u":"https://kiwi.com/u/yg2jjk6t7z"},{"f":"GDN","t":"OSL","d":"2027-03-15","dep":"06:00","arr":"07:25","a":"Wizz Air","p":24,"u":"https://kiwi.com/u/5zssczr48g"},{"f":"OSL","t":"WAW","d":"2027-03-15","dep":"09:35","arr":"11:25","a":"Norwegian","p":30,"u":"https://kiwi.com/u/yng8tgf3pb"},{"f":"OSL","t":"GDN","d":"2027-03-15","dep":"10:00","arr":"11:25","a":"Norwegian","p":30,"u":"https://kiwi.com/u/7mkp5wh9cp"},{"f":"BGO","t":"GDN","d":"2027-03-15","dep":"13:40","arr":"15:25","a":"Wizz Air","p":31,"u":"https://kiwi.com/u/vfvudwrqff"},{"f":"GDN","t":"OSL","d":"2027-03-15","dep":"12:05","arr":"13:35","a":"Norwegian","p":39,"u":"https://kiwi.com/u/32hy96rd5t"},{"f":"KRK","t":"OSL","d":"2027-03-15","dep":"12:55","arr":"15:15","a":"Wizz Air","p":40,"u":"https://kiwi.com/u/35cmscrzn7"},{"f":"OSL","t":"KRK","d":"2027-03-15","dep":"15:50","arr":"18:05","a":"Wizz Air","p":42,"u":"https://kiwi.com/u/vgb94cuy84"},{"f":"OSL","t":"KRK","d":"2027-03-15","dep":"10:00","arr":"12:05","a":"Norwegian","p":48,"u":"https://kiwi.com/u/jfv3nxtvqn"},{"f":"KRK","t":"OSL","d":"2027-03-15","dep":"12:45","arr":"14:50","a":"Norwegian","p":61,"u":"https://kiwi.com/u/xjnj9xp7v4"},{"f":"OSL","t":"WAW","d":"2027-03-15","dep":"10:40","arr":"12:40","a":"LOT","p":68,"u":"https://kiwi.com/u/643m9u9cwf"},{"f":"OSL","t":"WAW","d":"2027-03-15","dep":"19:40","arr":"21:45","a":"LOT","p":68,"u":"https://kiwi.com/u/69mh4d3mrn"},{"f":"WAW","t":"OSL","d":"2027-03-15","dep":"12:05","arr":"14:00","a":"Norwegian","p":75,"u":"https://kiwi.com/u/8dx2vxy9fb"},{"f":"WAW","t":"OSL","d":"2027-03-15","dep":"16:45","arr":"18:55","a":"LOT","p":83,"u":"https://kiwi.com/u/h6xbxz28tj"},{"f":"WAW","t":"OSL","d":"2027-03-15","dep":"07:40","arr":"09:50","a":"LOT","p":87,"u":"https://kiwi.com/u/qmsrh3njqc"},{"f":"OSL","t":"GDN","d":"2027-03-15","dep":"12:40","arr":"14:15","a":"Wizz Air","p":94,"u":"https://kiwi.com/u/6sc4z8sj26"},{"f":"GDN","t":"OSL","d":"2027-03-16","dep":"12:05","arr":"13:35","a":"Norwegian","p":21,"u":"https://kiwi.com/u/j7tssh32wu"},{"f":"KRK","t":"OSL","d":"2027-03-16","dep":"12:45","arr":"14:50","a":"Norwegian","p":21,"u":"https://kiwi.com/u/7nk73uusyu"},{"f":"OSL","t":"GDN","d":"2027-03-16","dep":"10:00","arr":"11:25","a":"Norwegian","p":37,"u":"https://kiwi.com/u/2m9kuvtgu3"},{"f":"OSL","t":"KRK","d":"2027-03-16","dep":"10:00","arr":"12:05","a":"Norwegian","p":56,"u":"https://kiwi.com/u/w4uqswz9tp"},{"f":"OSL","t":"WAW","d":"2027-03-16","dep":"10:40","arr":"12:40","a":"LOT","p":68,"u":"https://kiwi.com/u/6n2chpd255"},{"f":"OSL","t":"WAW","d":"2027-03-16","dep":"19:45","arr":"21:50","a":"LOT","p":68,"u":"https://kiwi.com/u/w9ggww433h"},{"f":"WAW","t":"OSL","d":"2027-03-16","dep":"07:40","arr":"09:50","a":"LOT","p":92,"u":"https://kiwi.com/u/qnbpm4pygq"},{"f":"WAW","t":"OSL","d":"2027-03-16","dep":"16:45","arr":"18:55","a":"LOT","p":92,"u":"https://kiwi.com/u/gp4sb85wdf"},{"f":"GDN","t":"OSL","d":"2027-03-17","dep":"12:05","arr":"13:35","a":"Norwegian","p":19,"u":"https://kiwi.com/u/ujs6pq2syg"},{"f":"GDN","t":"OSL","d":"2027-03-17","dep":"15:45","arr":"17:25","a":"Wizz Air","p":20,"u":"https://kiwi.com/u/6nu2dprm6g"},{"f":"OSL","t":"GDN","d":"2027-03-17","dep":"18:00","arr":"19:35","a":"Wizz Air","p":37,"u":"https://kiwi.com/u/28kfb2k3mr"},{"f":"KRK","t":"OSL","d":"2027-03-17","dep":"12:45","arr":"14:50","a":"Norwegian","p":39,"u":"https://kiwi.com/u/hxquxmgppj"},{"f":"OSL","t":"GDN","d":"2027-03-17","dep":"10:00","arr":"11:25","a":"Norwegian","p":48,"u":"https://kiwi.com/u/wjsvrd536f"},{"f":"WAW","t":"OSL","d":"2027-03-17","dep":"16:50","arr":"19:00","a":"LOT","p":82,"u":"https://kiwi.com/u/juu2uthwg7"},{"f":"WAW","t":"OSL","d":"2027-03-17","dep":"07:40","arr":"09:50","a":"LOT","p":88,"u":"https://kiwi.com/u/qdkv3jzvpj"},{"f":"OSL","t":"KRK","d":"2027-03-17","dep":"10:00","arr":"12:05","a":"Norwegian","p":96,"u":"https://kiwi.com/u/f2hpqqz8pv"},{"f":"OSL","t":"WAW","d":"2027-03-17","dep":"10:40","arr":"12:40","a":"LOT","p":176,"u":"https://kiwi.com/u/k3fqkrv3dx"},{"f":"OSL","t":"WAW","d":"2027-03-17","dep":"19:50","arr":"21:55","a":"LOT","p":177,"u":"https://kiwi.com/u/m68pf7fvpm"},{"f":"GDN","t":"OSL","d":"2027-03-18","dep":"15:45","arr":"17:25","a":"Wizz Air","p":20,"u":"https://kiwi.com/u/5rzxb3znpd"},{"f":"GDN","t":"OSL","d":"2027-03-18","dep":"12:05","arr":"13:35","a":"Norwegian","p":21,"u":"https://kiwi.com/u/c86x9whjzb"},{"f":"KRK","t":"OSL","d":"2027-03-18","dep":"12:45","arr":"14:50","a":"Norwegian","p":31,"u":"https://kiwi.com/u/ncqydqvsu7"},{"f":"KRK","t":"OSL","d":"2027-03-18","dep":"12:55","arr":"15:15","a":"Wizz Air","p":33,"u":"https://kiwi.com/u/3ghgj9gjp4"},{"f":"WAW","t":"OSL","d":"2027-03-18","dep":"12:05","arr":"14:00","a":"Norwegian","p":38,"u":"https://kiwi.com/u/phknj5kskg"},{"f":"BGO","t":"GDN","d":"2027-03-18","dep":"08:55","arr":"10:40","a":"Wizz Air","p":42,"u":"https://kiwi.com/u/ppjzjc8gjq"},{"f":"OSL","t":"GDN","d":"2027-03-18","dep":"18:00","arr":"19:35","a":"Wizz Air","p":52,"u":"https://kiwi.com/u/gnpn6ym5rh"},{"f":"OSL","t":"GDN","d":"2027-03-18","dep":"10:00","arr":"11:25","a":"Norwegian","p":72,"u":"https://kiwi.com/u/2dgb6h66mc"},{"f":"WAW","t":"OSL","d":"2027-03-18","dep":"07:40","arr":"09:50","a":"LOT","p":73,"u":"https://kiwi.com/u/zgwt5u7ymx"},{"f":"WAW","t":"OSL","d":"2027-03-18","dep":"16:45","arr":"18:55","a":"LOT","p":73,"u":"https://kiwi.com/u/qyjff5fznq"},{"f":"BGO","t":"KRK","d":"2027-03-18","dep":"17:30","arr":"19:50","a":"Norwegian","p":87,"u":"https://kiwi.com/u/y92w56b6qh"},{"f":"OSL","t":"WAW","d":"2027-03-18","dep":"09:35","arr":"11:25","a":"Norwegian","p":96,"u":"https://kiwi.com/u/pjhwwcw65x"},{"f":"OSL","t":"KRK","d":"2027-03-18","dep":"15:50","arr":"18:05","a":"Wizz Air","p":106,"u":"https://kiwi.com/u/tfzk4y6b7j"},{"f":"OSL","t":"KRK","d":"2027-03-18","dep":"10:00","arr":"12:05","a":"Norwegian","p":107,"u":"https://kiwi.com/u/jv2yvqkjc5"},{"f":"OSL","t":"WAW","d":"2027-03-18","dep":"10:40","arr":"12:40","a":"LOT","p":207,"u":"https://kiwi.com/u/qw7cjjbuhr"},{"f":"OSL","t":"WAW","d":"2027-03-18","dep":"19:45","arr":"21:50","a":"LOT","p":366,"u":"https://kiwi.com/u/cwzqxc4h35"},{"f":"GDN","t":"OSL","d":"2027-03-19","dep":"06:00","arr":"07:40","a":"Wizz Air","p":19,"u":"https://kiwi.com/u/44dnnvkmu4"},{"f":"KRK","t":"OSL","d":"2027-03-19","dep":"12:45","arr":"14:50","a":"Norwegian","p":21,"u":"https://kiwi.com/u/6kx3bd4tmv"},{"f":"GDN","t":"OSL","d":"2027-03-19","dep":"10:20","arr":"11:50","a":"Norwegian","p":28,"u":"https://kiwi.com/u/9p575mbxvy"},{"f":"WAW","t":"OSL","d":"2027-03-19","dep":"12:05","arr":"14:00","a":"Norwegian","p":38,"u":"https://kiwi.com/u/w6h9u7jff7"},{"f":"KRK","t":"OSL","d":"2027-03-19","dep":"21:50","arr":"23:55","a":"Norwegian","p":39,"u":"https://kiwi.com/u/7uyph9y4nt"},{"f":"KRK","t":"OSL","d":"2027-03-19","dep":"12:55","arr":"15:15","a":"Wizz Air","p":40,"u":"https://kiwi.com/u/zd25prs58t"},{"f":"WAW","t":"OSL","d":"2027-03-19","dep":"07:40","arr":"09:50","a":"LOT","p":73,"u":"https://kiwi.com/u/xk3bzc7843"},{"f":"BGO","t":"GDN","d":"2027-03-19","dep":"13:40","arr":"15:25","a":"Wizz Air","p":73,"u":"https://kiwi.com/u/cmmxqpwd6r"},{"f":"WAW","t":"OSL","d":"2027-03-19","dep":"16:45","arr":"18:55","a":"LOT","p":73,"u":"https://kiwi.com/u/fbpy9r4xrn"},{"f":"OSL","t":"GDN","d":"2027-03-19","dep":"12:40","arr":"14:15","a":"Wizz Air","p":84,"u":"https://kiwi.com/u/vcsuqnhqu6"},{"f":"BGO","t":"KRK","d":"2027-03-19","dep":"21:10","arr":"23:30","a":"Wizz Air","p":105,"u":"https://kiwi.com/u/jk7fw8ghfc"},{"f":"OSL","t":"GDN","d":"2027-03-19","dep":"08:15","arr":"09:40","a":"Norwegian","p":107,"u":"https://kiwi.com/u/843m2rhn7v"},{"f":"OSL","t":"WAW","d":"2027-03-19","dep":"09:35","arr":"11:25","a":"Norwegian","p":114,"u":"https://kiwi.com/u/unyh5fctqd"},{"f":"OSL","t":"KRK","d":"2027-03-19","dep":"10:00","arr":"12:05","a":"Norwegian","p":144,"u":"https://kiwi.com/u/3qfjnbts2r"},{"f":"OSL","t":"KRK","d":"2027-03-19","dep":"19:05","arr":"21:10","a":"Norwegian","p":162,"u":"https://kiwi.com/u/dbzp7zhrmh"},{"f":"OSL","t":"KRK","d":"2027-03-19","dep":"15:50","arr":"18:05","a":"Wizz Air","p":200,"u":"https://kiwi.com/u/9u56q3n2tp"},{"f":"OSL","t":"WAW","d":"2027-03-19","dep":"19:45","arr":"21:50","a":"LOT","p":276,"u":"https://kiwi.com/u/3bpqvj3tsc"},{"f":"OSL","t":"WAW","d":"2027-03-19","dep":"10:40","arr":"12:40","a":"LOT","p":315,"u":"https://kiwi.com/u/cbuw3w49bb"},{"f":"GDN","t":"OSL","d":"2027-03-20","dep":"15:45","arr":"17:25","a":"Wizz Air","p":20,"u":"https://kiwi.com/u/z9wmf8kr69"},{"f":"WAW","t":"OSL","d":"2027-03-20","dep":"07:40","arr":"09:50","a":"LOT","p":87,"u":"https://kiwi.com/u/db4748cc4f"},{"f":"OSL","t":"GDN","d":"2027-03-20","dep":"18:00","arr":"19:35","a":"Wizz Air","p":132,"u":"https://kiwi.com/u/4xxv3gzvjb"},{"f":"OSL","t":"WAW","d":"2027-03-20","dep":"10:40","arr":"12:40","a":"LOT","p":290,"u":"https://kiwi.com/u/2rjphy5buv"},{"f":"GDN","t":"OSL","d":"2027-03-21","dep":"06:00","arr":"07:40","a":"Wizz Air","p":20,"u":"https://kiwi.com/u/v7g7sxwfp5"},{"f":"GDN","t":"OSL","d":"2027-03-21","dep":"15:40","arr":"17:20","a":"Wizz Air","p":20,"u":"https://kiwi.com/u/y9kp8mfv73"},{"f":"KRK","t":"OSL","d":"2027-03-21","dep":"11:00","arr":"13:05","a":"Norwegian","p":21,"u":"https://kiwi.com/u/n5vqkw5p8r"},{"f":"KRK","t":"OSL","d":"2027-03-21","dep":"20:40","arr":"22:45","a":"Norwegian","p":22,"u":"https://kiwi.com/u/bmx3u3shmw"},{"f":"GDN","t":"OSL","d":"2027-03-21","dep":"10:35","arr":"12:05","a":"Norwegian","p":28,"u":"https://kiwi.com/u/449f7dc6gt"},{"f":"GDN","t":"OSL","d":"2027-03-21","dep":"21:45","arr":"23:15","a":"Norwegian","p":28,"u":"https://kiwi.com/u/zy6nqyhjmk"},{"f":"KRK","t":"OSL","d":"2027-03-21","dep":"12:55","arr":"15:15","a":"Wizz Air","p":31,"u":"https://kiwi.com/u/fmv9n5v56j"},{"f":"OSL","t":"GDN","d":"2027-03-21","dep":"17:55","arr":"19:30","a":"Wizz Air","p":37,"u":"https://kiwi.com/u/grjc42jbp7"},{"f":"WAW","t":"OSL","d":"2027-03-21","dep":"14:25","arr":"16:20","a":"Norwegian","p":38,"u":"https://kiwi.com/u/8dck7n6w4g"},{"f":"OSL","t":"GDN","d":"2027-03-21","dep":"08:15","arr":"09:50","a":"Wizz Air","p":69,"u":"https://kiwi.com/u/c5qqr6grg4"},{"f":"BGO","t":"GDN","d":"2027-03-21","dep":"08:55","arr":"10:40","a":"Wizz Air","p":73,"u":"https://kiwi.com/u/vqp83wsm25"},{"f":"BGO","t":"KRK","d":"2027-03-21","dep":"21:10","arr":"23:30","a":"Wizz Air","p":84,"u":"https://kiwi.com/u/7vwczqpyvh"},{"f":"OSL","t":"GDN","d":"2027-03-21","dep":"19:40","arr":"21:05","a":"Norwegian","p":87,"u":"https://kiwi.com/u/ccc3dtgnzb"},{"f":"OSL","t":"WAW","d":"2027-03-21","dep":"11:55","arr":"13:45","a":"Norwegian","p":105,"u":"https://kiwi.com/u/uyt547uxwh"},{"f":"BGO","t":"KRK","d":"2027-03-21","dep":"07:05","arr":"09:25","a":"Norwegian","p":106,"u":"https://kiwi.com/u/c37p2snq5v"},{"f":"OSL","t":"GDN","d":"2027-03-21","dep":"08:30","arr":"09:55","a":"Norwegian","p":107,"u":"https://kiwi.com/u/6dxtjud35f"},{"f":"OSL","t":"KRK","d":"2027-03-21","dep":"17:55","arr":"20:00","a":"Norwegian","p":116,"u":"https://kiwi.com/u/rtmz5xrdy2"},{"f":"WAW","t":"OSL","d":"2027-03-21","dep":"16:45","arr":"18:55","a":"LOT","p":119,"u":"https://kiwi.com/u/ws343tygrv"},{"f":"OSL","t":"KRK","d":"2027-03-21","dep":"15:50","arr":"18:05","a":"Wizz Air","p":121,"u":"https://kiwi.com/u/4f68wvx8hx"},{"f":"OSL","t":"KRK","d":"2027-03-21","dep":"08:15","arr":"10:20","a":"Norwegian","p":125,"u":"https://kiwi.com/u/qmryh49q32"},{"f":"OSL","t":"WAW","d":"2027-03-21","dep":"19:45","arr":"21:50","a":"LOT","p":300,"u":"https://kiwi.com/u/96zu483gb5"},{"f":"GDN","t":"OSL","d":"2027-03-22","dep":"06:00","arr":"07:25","a":"Wizz Air","p":20,"u":"https://kiwi.com/u/k2kpzcstym"},{"f":"GDN","t":"OSL","d":"2027-03-22","dep":"12:05","arr":"13:35","a":"Norwegian","p":21,"u":"https://kiwi.com/u/ypqqb6qvkm"},{"f":"WAW","t":"OSL","d":"2027-03-22","dep":"12:05","arr":"14:00","a":"Norwegian","p":31,"u":"https://kiwi.com/u/jmfyybvfdd"},{"f":"OSL","t":"GDN","d":"2027-03-22","dep":"12:40","arr":"14:15","a":"Wizz Air","p":31,"u":"https://kiwi.com/u/k4t9xcd7fn"},{"f":"KRK","t":"OSL","d":"2027-03-22","dep":"12:55","arr":"15:15","a":"Wizz Air","p":31,"u":"https://kiwi.com/u/5c3nwk8jvq"},{"f":"KRK","t":"OSL","d":"2027-03-22","dep":"12:45","arr":"14:50","a":"Norwegian","p":69,"u":"https://kiwi.com/u/n983xvrk3y"},{"f":"BGO","t":"GDN","d":"2027-03-22","dep":"13:40","arr":"15:25","a":"Wizz Air","p":69,"u":"https://kiwi.com/u/nc3r3mqu4y"},{"f":"OSL","t":"GDN","d":"2027-03-22","dep":"10:00","arr":"11:25","a":"Norwegian","p":78,"u":"https://kiwi.com/u/6dtb8md7nm"},{"f":"WAW","t":"OSL","d":"2027-03-22","dep":"07:40","arr":"09:50","a":"LOT","p":86,"u":"https://kiwi.com/u/qsvuh3jh7u"},{"f":"OSL","t":"KRK","d":"2027-03-22","dep":"15:50","arr":"18:05","a":"Wizz Air","p":94,"u":"https://kiwi.com/u/sm6bjz82v9"},{"f":"WAW","t":"OSL","d":"2027-03-22","dep":"16:45","arr":"18:55","a":"LOT","p":97,"u":"https://kiwi.com/u/2q3ywdnmrb"},{"f":"OSL","t":"WAW","d":"2027-03-22","dep":"09:35","arr":"11:25","a":"Norwegian","p":105,"u":"https://kiwi.com/u/46hpcpn8fd"},{"f":"OSL","t":"KRK","d":"2027-03-22","dep":"10:00","arr":"12:05","a":"Norwegian","p":107,"u":"https://kiwi.com/u/bt7xxpchqf"},{"f":"OSL","t":"WAW","d":"2027-03-22","dep":"19:40","arr":"21:45","a":"LOT","p":144,"u":"https://kiwi.com/u/xwk4g5r8bk"},{"f":"OSL","t":"WAW","d":"2027-03-22","dep":"10:40","arr":"12:40","a":"LOT","p":182,"u":"https://kiwi.com/u/8z7jkugnmp"},{"f":"GDN","t":"OSL","d":"2027-03-23","dep":"15:45","arr":"17:25","a":"Wizz Air","p":20,"u":"https://kiwi.com/u/vchqwqpzbq"},{"f":"GDN","t":"OSL","d":"2027-03-23","dep":"12:05","arr":"13:35","a":"Norwegian","p":21,"u":"https://kiwi.com/u/6jg62ycz6s"},{"f":"KRK","t":"OSL","d":"2027-03-23","dep":"12:45","arr":"14:50","a":"Norwegian","p":21,"u":"https://kiwi.com/u/kj8j2sr333"},{"f":"OSL","t":"GDN","d":"2027-03-23","dep":"10:00","arr":"11:25","a":"Norwegian","p":72,"u":"https://kiwi.com/u/pnrbbynuvp"},{"f":"BGO","t":"GDN","d":"2027-03-23","dep":"22:45","arr":"00:30","a":"Wizz Air","p":74,"u":"https://kiwi.com/u/hgfkup4s5s"},{"f":"OSL","t":"GDN","d":"2027-03-23","dep":"18:00","arr":"19:35","a":"Wizz Air","p":84,"u":"https://kiwi.com/u/ph5n8xdsur"},{"f":"WAW","t":"OSL","d":"2027-03-23","dep":"07:40","arr":"09:50","a":"LOT","p":91,"u":"https://kiwi.com/u/qnks9dqmh6"},{"f":"WAW","t":"OSL","d":"2027-03-23","dep":"16:45","arr":"18:55","a":"LOT","p":91,"u":"https://kiwi.com/u/5t86vn4tgp"},{"f":"OSL","t":"KRK","d":"2027-03-23","dep":"10:00","arr":"12:05","a":"Norwegian","p":96,"u":"https://kiwi.com/u/w2ud66uzc5"},{"f":"OSL","t":"WAW","d":"2027-03-23","dep":"10:40","arr":"12:40","a":"LOT","p":151,"u":"https://kiwi.com/u/f3pr4jzd3x"},{"f":"OSL","t":"WAW","d":"2027-03-23","dep":"19:45","arr":"21:50","a":"LOT","p":169,"u":"https://kiwi.com/u/skyz9qsncj"},{"f":"GDN","t":"OSL","d":"2027-03-24","dep":"06:00","arr":"07:35","a":"Wizz Air","p":20,"u":"https://kiwi.com/u/bvxdufn9sm"},{"f":"GDN","t":"OSL","d":"2027-03-24","dep":"15:45","arr":"17:25","a":"Wizz Air","p":20,"u":"https://kiwi.com/u/tw87tu2x6y"},{"f":"KRK","t":"OSL","d":"2027-03-24","dep":"12:55","arr":"15:15","a":"Wizz Air","p":31,"u":"https://kiwi.com/u/uzqsuzqn4v"},{"f":"GDN","t":"OSL","d":"2027-03-24","dep":"12:05","arr":"13:35","a":"Norwegian","p":41,"u":"https://kiwi.com/u/846367bj92"},{"f":"KRK","t":"OSL","d":"2027-03-24","dep":"12:45","arr":"14:50","a":"Norwegian","p":51,"u":"https://kiwi.com/u/m32zxwkgf4"},{"f":"OSL","t":"GDN","d":"2027-03-24","dep":"08:15","arr":"09:50","a":"Wizz Air","p":59,"u":"https://kiwi.com/u/k37zts5u6m"},{"f":"WAW","t":"OSL","d":"2027-03-24","dep":"07:40","arr":"09:50","a":"LOT","p":92,"u":"https://kiwi.com/u/3rkddktbf8"},{"f":"WAW","t":"OSL","d":"2027-03-24","dep":"16:50","arr":"19:00","a":"LOT","p":92,"u":"https://kiwi.com/u/ms3sp62tug"},{"f":"OSL","t":"GDN","d":"2027-03-24","dep":"18:00","arr":"19:35","a":"Wizz Air","p":105,"u":"https://kiwi.com/u/qw3crjrzjy"},{"f":"OSL","t":"GDN","d":"2027-03-24","dep":"10:00","arr":"11:25","a":"Norwegian","p":107,"u":"https://kiwi.com/u/4ndwpt4xvp"},{"f":"OSL","t":"KRK","d":"2027-03-24","dep":"10:00","arr":"12:05","a":"Norwegian","p":116,"u":"https://kiwi.com/u/uy4q6x7dmd"},{"f":"BGO","t":"GDN","d":"2027-03-24","dep":"08:55","arr":"10:40","a":"Wizz Air","p":131,"u":"https://kiwi.com/u/hu52yud9z7"},{"f":"OSL","t":"KRK","d":"2027-03-24","dep":"15:50","arr":"18:05","a":"Wizz Air","p":141,"u":"https://kiwi.com/u/hyyu38zxqn"},{"f":"OSL","t":"WAW","d":"2027-03-24","dep":"10:40","arr":"12:40","a":"LOT","p":166,"u":"https://kiwi.com/u/nr58d4t486"},{"f":"OSL","t":"WAW","d":"2027-03-24","dep":"19:50","arr":"21:55","a":"LOT","p":166,"u":"https://kiwi.com/u/tznd5trk8p"},{"f":"GDN","t":"OSL","d":"2027-03-25","dep":"15:45","arr":"17:25","a":"Wizz Air","p":38,"u":"https://kiwi.com/u/dfuuqmswsw"},{"f":"GDN","t":"OSL","d":"2027-03-25","dep":"12:05","arr":"13:35","a":"Norwegian","p":39,"u":"https://kiwi.com/u/uq794k8cn2"},{"f":"KRK","t":"OSL","d":"2027-03-25","dep":"12:55","arr":"15:15","a":"Wizz Air","p":52,"u":"https://kiwi.com/u/xusx8fjwc9"},{"f":"WAW","t":"OSL","d":"2027-03-25","dep":"12:05","arr":"14:00","a":"Norwegian","p":56,"u":"https://kiwi.com/u/8qyc8jzcqw"},{"f":"KRK","t":"OSL","d":"2027-03-25","dep":"12:45","arr":"14:50","a":"Norwegian","p":64,"u":"https://kiwi.com/u/h9j6zwtbrh"},{"f":"BGO","t":"KRK","d":"2027-03-25","dep":"17:30","arr":"19:50","a":"Norwegian","p":72,"u":"https://kiwi.com/u/hwmy9ssk86"},{"f":"WAW","t":"OSL","d":"2027-03-25","dep":"07:40","arr":"09:50","a":"LOT","p":73,"u":"https://kiwi.com/u/8fg6n35jz7"},{"f":"WAW","t":"OSL","d":"2027-03-25","dep":"16:45","arr":"18:55","a":"LOT","p":73,"u":"https://kiwi.com/u/4rtbzqxwzp"},{"f":"OSL","t":"GDN","d":"2027-03-25","dep":"18:00","arr":"19:35","a":"Wizz Air","p":73,"u":"https://kiwi.com/u/ksxu7jms8s"},{"f":"OSL","t":"GDN","d":"2027-03-25","dep":"10:00","arr":"11:25","a":"Norwegian","p":87,"u":"https://kiwi.com/u/mnjyy6htu5"},{"f":"OSL","t":"WAW","d":"2027-03-25","dep":"09:35","arr":"11:25","a":"Norwegian","p":93,"u":"https://kiwi.com/u/3nz93c58fk"},{"f":"OSL","t":"KRK","d":"2027-03-25","dep":"15:50","arr":"18:05","a":"Wizz Air","p":94,"u":"https://kiwi.com/u/wx48t2vfzr"},{"f":"OSL","t":"KRK","d":"2027-03-25","dep":"10:00","arr":"12:05","a":"Norwegian","p":125,"u":"https://kiwi.com/u/9g7stymvp5"},{"f":"BGO","t":"GDN","d":"2027-03-25","dep":"08:55","arr":"10:40","a":"Wizz Air","p":157,"u":"https://kiwi.com/u/ccpm38434y"},{"f":"OSL","t":"WAW","d":"2027-03-25","dep":"10:40","arr":"12:40","a":"LOT","p":209,"u":"https://kiwi.com/u/58jvvsy8h6"},{"f":"OSL","t":"WAW","d":"2027-03-25","dep":"19:45","arr":"21:50","a":"LOT","p":226,"u":"https://kiwi.com/u/44jtkj87tw"}]/*FL_END*/;
+const FL_DATE="24.11.2026";
+const PL={KRK:"Краків",WAW:"Варшава",RZE:"Жешув",KTW:"Катовіце",LUZ:"Люблін",GDN:"Гданськ"};
+const PL_ORDER=["KRK","WAW","RZE","LUZ","KTW","GDN"];   /* ближчі до України спершу */
+const FAR=new Set(["GDN"]);
 
 const ROUTES={"d3":{"km":270,"h":4.5,"line":[[59.914,10.753],[59.907,10.741],[59.921,10.674],[59.89,10.51],[59.92,10.473],[59.948,10.38],[60.008,10.272],[60.049,10.278],[60.062,10.308],[60.079,10.285],[60.135,10.274],[60.151,10.221],[60.176,10.206],[60.202,10.127],[60.208,9.983],[60.228,9.969],[60.257,9.888],[60.267,9.789],[60.289,9.742],[60.289,9.688],[60.37,9.639],[60.381,9.614],[60.398,9.501],[60.439,9.446],[60.422,9.379],[60.429,9.319],[60.445,9.31],[60.473,9.223],[60.487,9.221],[60.49,9.18],[60.531,9.158],[60.622,9.056],[60.655,9.055],[60.699,9.012],[60.701,8.923],[60.746,8.87],[60.81,8.668],[60.859,8.596],[60.865,8.517],[60.879,8.486],[60.867,8.375],[60.891,8.337],[60.9,8.248],[60.937,8.179],[61.001,8.133],[61.012,8.066],[61.048,7.978],[61.074,7.956],[61.069,7.915],[61.079,7.845],[61.047,7.813],[61.033,7.798],[61.047,7.788],[61.057,7.672]]},"d4":{"km":105,"h":2.0,"line":[[61.057,7.672],[61.058,7.658],[61.046,7.624],[61.054,7.569],[61.054,7.533],[61.058,7.518],[61.069,7.501],[61.097,7.517],[61.101,7.507],[61.095,7.487],[61.098,7.473],[61.099,7.481],[61.095,7.487],[61.101,7.508],[61.097,7.517],[61.093,7.517],[61.074,7.501],[61.065,7.505],[61.061,7.495],[61.031,7.472],[61.006,7.443],[60.983,7.402],[60.898,7.213],[60.907,7.19],[60.923,7.204],[60.909,7.203],[60.923,7.204],[60.904,7.187],[60.903,7.173],[60.89,7.157],[60.882,7.155],[60.876,7.145],[60.867,7.142],[60.864,7.129],[60.858,7.12],[60.86,7.104],[60.863,7.114],[60.86,7.104],[60.868,7.115],[60.879,7.104],[60.9,7.063],[60.892,7.051],[60.879,6.843],[60.863,6.817],[60.856,6.779],[60.857,6.763],[60.845,6.728],[60.84,6.698],[60.842,6.687],[60.836,6.684],[60.831,6.678],[60.825,6.688],[60.814,6.686],[60.808,6.673],[60.804,6.641]]},"d5":{"km":237,"h":4.5,"line":[[60.804,6.641],[60.782,6.581],[60.783,6.556],[60.793,6.541],[60.792,6.508],[60.784,6.489],[60.776,6.484],[60.75,6.501],[60.743,6.49],[60.724,6.491],[60.733,6.489],[60.722,6.474],[60.728,6.483],[60.733,6.489],[60.709,6.485],[60.662,6.436],[60.636,6.44],[60.628,6.526],[60.6,6.553],[60.572,6.67],[60.573,6.693],[60.566,6.687],[60.559,6.711],[60.566,6.687],[60.573,6.692],[60.573,6.721],[60.556,6.732],[60.541,6.721],[60.49,6.823],[60.471,6.839],[60.466,6.829],[60.47,6.832],[60.472,6.943],[60.483,6.994],[60.478,7.026],[60.463,7.059],[60.467,7.071],[60.444,7.107],[60.425,7.111],[60.423,7.137],[60.416,7.151],[60.422,7.181],[60.418,7.205],[60.423,7.207],[60.42,7.226],[60.427,7.244],[60.42,7.226],[60.423,7.207],[60.418,7.205],[60.422,7.181],[60.416,7.151],[60.423,7.137],[60.425,7.111],[60.444,7.107],[60.467,7.071],[60.463,7.059],[60.478,7.026],[60.483,6.994],[60.472,6.943],[60.47,6.832],[60.466,6.829],[60.471,6.839],[60.49,6.824],[60.535,6.734],[60.52,6.698],[60.477,6.64],[60.471,6.61],[60.459,6.601],[60.458,6.527],[60.437,6.469],[60.431,6.407],[60.414,6.395],[60.415,6.367],[60.401,6.343],[60.392,6.297],[60.399,6.258],[60.417,6.23],[60.391,6.196],[60.37,6.195],[60.364,6.17],[60.374,6.149],[60.37,6.105],[60.375,6.122],[60.37,6.105],[60.373,6.145],[60.351,6.173],[60.343,6.212],[60.33,6.217],[60.322,6.178],[60.311,6.159],[60.287,6.175],[60.275,6.151],[60.257,6.137],[60.255,6.085],[60.274,6.03],[60.27,6.01],[60.251,6.007]]},"d6":{"km":114,"h":2.1,"line":[[60.251,6.007],[60.239,6.001],[60.231,6.004],[60.213,5.962],[60.206,5.965],[60.174,5.951],[60.167,5.933],[60.164,5.909],[60.174,5.899],[60.204,5.887],[60.2,5.878],[60.2,5.867],[60.203,5.854],[60.212,5.839],[60.221,5.852],[60.237,5.833],[60.236,5.823],[60.24,5.814],[60.241,5.783],[60.244,5.759],[60.242,5.745],[60.249,5.736],[60.246,5.717],[60.255,5.674],[60.269,5.669],[60.279,5.68],[60.284,5.68],[60.291,5.669],[60.296,5.667],[60.304,5.676],[60.31,5.674],[60.324,5.689],[60.344,5.693],[60.35,5.688],[60.366,5.695],[60.368,5.712],[60.367,5.747],[60.379,5.787],[60.401,5.755],[60.399,5.741],[60.404,5.725],[60.4,5.709],[60.393,5.703],[60.396,5.701],[60.397,5.691],[60.393,5.657],[60.427,5.621],[60.428,5.581],[60.422,5.558],[60.42,5.524],[60.424,5.502],[60.417,5.477],[60.417,5.465],[60.455,5.442],[60.46,5.427],[60.459,5.387],[60.477,5.353],[60.478,5.341],[60.476,5.334],[60.46,5.319],[60.439,5.324],[60.426,5.304],[60.414,5.322],[60.406,5.324],[60.401,5.315],[60.397,5.324],[60.394,5.325],[60.395,5.321],[60.391,5.317],[60.387,5.333],[60.362,5.343],[60.3,5.328],[60.297,5.322],[60.3,5.321]]},"d7":{"km":457,"h":7.8,"line":[[60.3,5.321],[60.344,5.404],[60.353,5.45],[60.417,5.465],[60.424,5.632],[60.443,5.636],[60.456,5.675],[60.457,5.737],[60.543,5.723],[60.579,5.776],[60.587,5.817],[60.612,5.833],[60.645,5.978],[60.647,6.146],[60.613,6.355],[60.642,6.432],[60.629,6.525],[60.594,6.57],[60.571,6.68],[60.574,6.72],[60.541,6.721],[60.49,6.823],[60.466,6.829],[60.483,6.994],[60.467,7.071],[60.426,7.109],[60.416,7.151],[60.427,7.244],[60.412,7.266],[60.412,7.351],[60.386,7.392],[60.368,7.508],[60.377,7.565],[60.413,7.65],[60.44,7.814],[60.47,7.814],[60.496,7.873],[60.514,7.856],[60.503,7.906],[60.505,8.012],[60.493,8.06],[60.53,8.147],[60.534,8.206],[60.53,8.235],[60.489,8.249],[60.459,8.365],[60.491,8.533],[60.465,8.589],[60.45,8.698],[60.458,8.793],[60.481,8.803],[60.504,8.887],[60.535,8.926],[60.563,8.996],[60.556,9.06],[60.571,9.113],[60.493,9.174],[60.487,9.221],[60.473,9.223],[60.445,9.31],[60.43,9.318],[60.422,9.379],[60.439,9.446],[60.397,9.501],[60.386,9.543],[60.388,9.594],[60.371,9.637],[60.289,9.687],[60.289,9.742],[60.268,9.788],[60.257,9.888],[60.228,9.969],[60.208,9.983],[60.202,10.127],[60.176,10.207],[60.151,10.221],[60.135,10.274],[60.079,10.285],[60.062,10.308],[60.049,10.278],[60.008,10.272],[59.948,10.38],[59.919,10.472],[59.89,10.508],[59.921,10.674],[59.905,10.742],[59.914,10.753]]},"d7b":{"km":487,"h":8.3,"line":[[60.3,5.321],[60.344,5.404],[60.353,5.45],[60.417,5.465],[60.424,5.632],[60.443,5.636],[60.456,5.675],[60.457,5.737],[60.542,5.722],[60.579,5.776],[60.587,5.817],[60.612,5.833],[60.647,6.011],[60.64,6.049],[60.647,6.146],[60.613,6.355],[60.628,6.418],[60.722,6.492],[60.784,6.489],[60.793,6.541],[60.782,6.581],[60.814,6.686],[60.842,6.687],[60.861,6.806],[60.88,6.849],[60.892,7.051],[60.9,7.064],[60.858,7.122],[60.899,7.17],[60.899,7.215],[61.004,7.44],[61.065,7.506],[61.096,7.518],[61.099,7.481],[61.097,7.518],[61.07,7.5],[61.058,7.518],[61.046,7.615],[61.058,7.661],[61.047,7.761],[61.08,7.848],[61.069,7.915],[61.074,7.955],[61.048,7.978],[61.012,8.066],[61.001,8.133],[60.937,8.179],[60.9,8.248],[60.891,8.337],[60.867,8.375],[60.879,8.486],[60.865,8.517],[60.854,8.611],[60.81,8.668],[60.746,8.87],[60.701,8.923],[60.698,9.015],[60.655,9.055],[60.622,9.056],[60.531,9.158],[60.496,9.171],[60.487,9.221],[60.473,9.223],[60.445,9.31],[60.43,9.318],[60.422,9.379],[60.438,9.447],[60.397,9.501],[60.386,9.543],[60.388,9.594],[60.371,9.638],[60.289,9.687],[60.289,9.742],[60.268,9.788],[60.257,9.888],[60.228,9.969],[60.208,9.983],[60.202,10.127],[60.175,10.207],[60.151,10.221],[60.135,10.274],[60.079,10.285],[60.062,10.308],[60.049,10.278],[60.008,10.272],[59.948,10.38],[59.919,10.472],[59.89,10.508],[59.921,10.674],[59.905,10.742],[59.914,10.753]]}};
 const COORDS={opera:[59.9075,10.7531],akershus:[59.9073,10.7368],fram:[59.903,10.699],vigeland:[59.927,10.7006],holmen:[59.9638,10.6676],
  borgund:[61.0472,7.8122],laerdal:[61.0991,7.481],stegastein:[60.9081,7.2075],flamline:[60.8628,7.1137],naeroy:[60.925,6.92],gudvangen:[60.8794,6.8424],
  tvinde:[60.7275,6.4846],bridge:[60.4747,6.8286],voring:[60.4285,7.2465],steinsdal:[60.3758,6.1219],late:[59.9497,6.5838],
  bryggen:[60.3972,5.3243],floibanen:[60.3962,5.3285],floyen:[60.3945,5.3431],ulriken:[60.3783,5.3866],vidda:[60.42,7.65]};
-const AIRPORTS={OSL:[60.1976,11.1004,"Ґардермуен"],TRF:[59.1867,10.2586,"Торп"],BGO:[60.2934,5.2181,"Берген, Флесланн"]};
+const AIRPORTS={OSL:[60.1976,11.1004,"Ґардермуен"],BGO:[60.2934,5.2181,"Берген, Флесланн"]};
 const DAYCOL={"day-0":"#8a8f98","day-1":"#7c5cff","day-2":"#7c5cff","day-3":"#e0435e","day-4":"#f08a24","day-5":"#1f9d6b","day-6":"#2a7de1","day-7":"#6b7280"};
 /* STAYS_START */
 const STAYS={
@@ -426,7 +397,7 @@ for(const k in STAYS) STAYS[k].forEach(s=>s.photo=STAYIMG[s.id]);
 
 const DAYS=[
  {id:"day-0",ic:"✈️",tab:"День 0",date:"сб, 13 березня",title:"Дорога в Осло",
-  text:"Ґардермуен (OSL) за 25 хв потягом від центру. Торп (TRF) дешевший на квиток, але до Осло ще ~2 год автобусом за ~30 €. Ціни на картках уже з дорогою до міста.",
+  text:"Летимо в Ґардермуен (OSL), звідти 25 хв потягом до центру. Рейс обирається вгорі, у блоці «Квитки».",
   flights:"out",
   info:[["🚌 Зі Львова","Найближчий прямий рейс з Кракова: 4–5 год автобусом чи потягом. З Жешува, Катовиць і Любліна прямих немає."],
         ["🎒 Багаж","Ціни лише за маленьку сумку під сидіння. Ручна поклажа +15–30 € за рейс."],
@@ -479,7 +450,7 @@ const DAYS=[
 
 const WX=[["Осло",-3,5],["Лердал",-2,6],["Восс",-4,4],["Гардангер",0,7],["Берген",1,8],["Перевали",-10,-2]];
 /* ======== STATE ======== */
-const S={ppl:6,ret:"B",out:0,back:0,stay:{N3:0,N4:0,N5:0,N6:0},fav:{}};
+const S={ppl:6,ret:"B",from:null,to:null,nights:7,onlyFree:true,day:null,po:null,pb:null,stay:{N3:0,N4:0,N5:0,N6:0},fav:{}};
 try{const s=JSON.parse(localStorage.getItem("fjord-trip-v2")||"{}");Object.assign(S,s);S.stay=Object.assign({N3:0,N4:0,N5:0,N6:0},s.stay||{})}catch(e){}
 const save=()=>{try{localStorage.setItem("fjord-trip-v2",JSON.stringify(S))}catch(e){}};
 
@@ -507,23 +478,88 @@ function renderHero(){
 function renderCats(){
   $("#cats").innerHTML=DAYS.map((d,i)=>`<button class="cat" role="tab" data-go="${d.id}" aria-selected="${i===0}"><span class="ic">${d.ic}</span>${i===0?"День 0":"День "+i}</button>`).join("");
 }
-const AP={OSL:"Ґардермуен",TRF:"Торп",BGO:"Берген"};
-const TRANSFER={OSL:[11,"потяг Vy до Осло, 25 хв"],TRF:[30,"автобус Torp-Ekspressen, ~2 год"],BGO:[4,"трамвай Bybanen, 45 хв"]};
-const nAp=f=>TRANSFER[f.t]?f.t:f.f;              /* the Norwegian airport of this flight */
-const ticket=f=>S.ppl>=6&&f.p6?f.p6/6:f.p;
-const withTr=f=>ticket(f)+TRANSFER[nAp(f)][0];
-function flightCard(f,i,kind,chosen){
-  const per=ticket(f), ap=nAp(f), tr=TRANSFER[ap];
-  const from=f.fc?`${f.fc} (${f.f})`:(AP[f.f]||f.f), to=f.tc?`${f.tc} (${f.t})`:(AP[f.t]||f.t);
-  const extra=f.early?" · раніше, 19.03":f.late?" · прилітаєш у день 1 зранку":"";
-  return `<button class="fl ${chosen?"chosen":""}" data-fl="${kind}:${i}">
-    <div class="route">${f.f}<i></i>${f.t}</div>
-    <div>${esc(from)} → ${esc(to)}</div>
-    <div class="when">${dt(f.d)} · ${f.dep}–${f.arr} · ${f.a}${extra}</div>
-    <div class="when">квиток ${Math.round(per)} € + ${tr[0]} € ${esc(tr[1])}</div>
-    <div class="bottom"><span class="p">${Math.round(per+tr[0])} € <small>разом з дорогою</small></span><a href="${f.u}" target="_blank" rel="noopener">Kiwi ↗</a></div>
-  </button>`;
+const TRANSFER={OSL:[11,"потяг Vy до Осло, 25 хв"],BGO:[4,"трамвай Bybanen, 45 хв"]};
+const nAp=f=>f.t==="OSL"||f.t==="BGO"?f.t:f.f;              /* норвезький аеропорт рейсу */
+/* ======== КВИТКИ: комбінатор ======== */
+let FREE=null;                                              /* Set дат, коли всі можуть (з who-when.js) */
+const fkey=f=>f.f+f.t+f.d+f.dep;
+const addD=(d,n)=>{const x=new Date(d+"T12:00");x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+const nightsOf=(a,b)=>Math.round((new Date(b+"T12:00")-new Date(a+"T12:00"))/864e5);
+const ddm=d=>{const[,m,dd]=d.split("-");return `${+dd}.${m}`};
+const homeAp=()=>S.ret==="A"?"BGO":"OSL";
+const outsAll=()=>FL.filter(f=>f.t==="OSL"&&PL[f.f]);
+const backsAll=()=>FL.filter(f=>f.f===homeAp()&&PL[f.t]);
+const cities=list=>PL_ORDER.filter(c=>list.some(f=>f.f===c||f.t===c));
+function defSel(list){const c=cities(list);const near=c.filter(x=>!FAR.has(x));return near.length?near:c}
+function combos(ignoreDay){
+  const from=new Set(S.from||defSel(outsAll())), to=new Set(S.to||defSel(backsAll()));
+  const res=[];
+  for(const o of outsAll()){
+    if(!from.has(o.f)) continue;
+    if(!ignoreDay&&S.day&&o.d!==S.day) continue;
+    if(S.onlyFree&&FREE&&!FREE.has(o.d)) continue;
+    for(const b of backsAll()){
+      if(!to.has(b.t)||nightsOf(o.d,b.d)!==S.nights) continue;
+      if(S.onlyFree&&FREE&&!FREE.has(b.d)) continue;
+      res.push({o,b,p:o.p+b.p});
+    }
+  }
+  return res.sort((x,y)=>x.p-y.p||PL_ORDER.indexOf(x.o.f)-PL_ORDER.indexOf(y.o.f)||x.o.d.localeCompare(y.o.d));
 }
+function chosen(){
+  let o=FL.find(f=>fkey(f)===S.po), b=FL.find(f=>fkey(f)===S.pb&&f.f===homeAp());
+  if(!o||!b){const c=combos(true)[0]; if(c){o=o||c.o; b=b||c.b}}
+  if(!o) o=outsAll().sort((x,y)=>x.p-y.p)[0];
+  if(!b) b=backsAll().sort((x,y)=>x.p-y.p)[0];
+  return {o,b};
+}
+const chip=(attr,val,label,on,extra="")=>`<button aria-pressed="${on}" data-${attr}="${val}">${label}${extra}</button>`;
+function renderCombos(){
+  if(!$("#combos")) return;
+  const oc=cities(outsAll()), bc=cities(backsAll());
+  const from=S.from||defSel(outsAll()), to=S.to||defSel(backsAll());
+  const minP=(list,c)=>Math.min(...list.filter(f=>f.f===c||f.t===c).map(f=>f.p));
+  $("#fromF").innerHTML=oc.map(c=>chip("from",c,PL[c],from.includes(c),` <small>від ${minP(outsAll(),c)} €${FAR.has(c)?" · далеко":""}</small>`)).join("");
+  $("#toF").innerHTML=bc.length?bc.map(c=>chip("to",c,PL[c],to.includes(c),` <small>від ${minP(backsAll(),c)} €${FAR.has(c)?" · далеко":""}</small>`)).join("")
+    :`<span class="tix-empty">З ${S.ret==="A"?"Бергена":"Осло"} прямих рейсів у Польщу на ці дні немає.</span>`;
+  $("#nightsF").innerHTML=[5,6,7,8,9].map(n=>chip("n",n,n,S.nights===n)).join("");
+  $("#onlyFree").checked=S.onlyFree; $("#onlyFree").disabled=!FREE;
+  /* смужка днів: найдешевша комбінація для кожного дня вильоту */
+  const all=combos(true), best={};
+  all.forEach(c=>{if(!(c.o.d in best)||c.p<best[c.o.d]) best[c.o.d]=c.p});
+  const days=[...new Set(outsAll().map(f=>f.d))].sort();
+  const vals=Object.values(best), lo=vals.length?Math.min(...vals):0;
+  if(S.day&&!(S.day in best)) S.day=null;
+  $("#dateF").innerHTML=chip("day","","<b>Будь-який</b><span>&nbsp;</span>",!S.day)+days.map(d=>{
+    const v=best[d], wd=new Date(d+"T12:00").toLocaleDateString("uk-UA",{weekday:"short"});
+    return `<button aria-pressed="${S.day===d}" data-day="${d}" ${v==null?"disabled":""} class="${v!=null&&v<=lo+5?"cheap":""}"><b>${+d.slice(8)}</b>${wd}<span>${v==null?"—":v+" €"}</span></button>`;
+  }).join("");
+  const list=combos(false), {o:co,b:cb}=chosen();
+  const seen=new Set(), top=[];
+  for(const c of list){const k=c.o.f+c.b.t+c.o.d; if(seen.has(k)) continue; seen.add(k); top.push(c); if(top.length>=6) break}
+  const leg=(arrow,f)=>`<span>${arrow} ${ddm(f.d)}</span><span>${f.f} ${f.dep} → ${f.t} ${f.arr} · ${esc(f.a)}</span><a href="${f.u}" target="_blank" rel="noopener">${f.p} € ↗</a>`;
+  $("#combos").innerHTML=top.length?top.map((c,i)=>{
+    const on=co&&cb&&fkey(c.o)===fkey(co)&&fkey(c.b)===fkey(cb);
+    const title=c.o.f===c.b.t?`${PL[c.o.f]} ⇄ ${S.ret==="A"?"Норвегія":"Осло"}`:`${PL[c.o.f]} → … → ${PL[c.b.t]}`;
+    return `<div class="tk${on?" top":""}">${i===0?'<span class="tag">Найдешевше</span>':""}
+      <div class="hd"><b>${title}</b><span class="tot">${c.p} €</span></div>
+      <div class="sub2">${S.nights} ночей · ${+c.o.d.slice(8)}–${+c.b.d.slice(8)} березня${c.b.f==="BGO"?" · назад з Бергена":""}${FAR.has(c.o.f)||FAR.has(c.b.t)?" · Гданськ далеко від України":""}</div>
+      <div class="leg">${leg("→",c.o)}${leg("←",c.b)}</div>
+      <button class="pick2" data-pick="${fkey(c.o)}|${fkey(c.b)}">${on?"✓ Обрано, враховано в бюджеті":"Обрати"}</button></div>`;
+  }).join(""):`<div class="tix-empty">Немає комбінацій під ці фільтри. Спробуй іншу кількість ночей, інше місто або зніми «лише дні, коли всі можуть».</div>`;
+  $("#flNote").textContent=`Лише Польща й лише прямі рейси в Ґардермуен (OSL). Ціна за одну людину в обидва боки, тільки рюкзак під сидіння, Kiwi.com на ${FL_DATE}. Обери комбінацію, і дати днів та бюджет нижче підлаштуються. Бронює кожен сам.`;
+}
+function renderChosen(){
+  const {o,b}=chosen();
+  const line=(f,label)=>f?`<b>${label}</b><span>${f.f} ${f.dep} → ${f.t} ${f.arr}</span><span class="muted">${dt(f.d)} · ${esc(f.a)}</span><a href="${f.u}" target="_blank" rel="noopener">${f.p} € ↗</a><a href="#when-sec">змінити</a>`:`<span class="muted">Рейс ще не обрано. <a href="#when-sec">Обрати вгорі</a></span>`;
+  const oc=$("#outChosen"), bc=$("#backChosen");
+  if(oc) oc.innerHTML=line(o,"✈ Летимо");
+  if(bc) bc.innerHTML=line(b,"✈ Додому");
+  const pill=$("#whenPill");
+  if(pill&&o&&b) pill.textContent=`${+o.d.slice(8)}–${+b.d.slice(8)} березня 2027`;
+}
+window.setFreeSpan=span=>{FREE=span&&span.length?new Set(span):null;renderCombos();if(!S.po){renderDays();budget()}};
+function tripStart(){return chosen().o?.d||"2027-03-13"}
 function stayCard(s,i,key){
   const chosen=S.stay[key]===i, id="stay-"+s.id;
   const img=s.photo?`<img src="${esc(s.photo)}" alt="${esc(s.name)}" loading="lazy"><a class="cred" href="${s.url}" target="_blank" rel="noopener">фото · Airbnb</a>`:'<div class="noimg">Фото на Airbnb ↗</div>';
@@ -542,17 +578,12 @@ function stayCard(s,i,key){
 function renderDays(){
   $("#days").innerHTML=DAYS.map((d,i)=>{
     let h=`<section class="day" id="${d.id}"><div class="day-head"><div>
-      <div class="eyebrow">${i===0?"День 0":"День "+i} · ${d.date}</div><h2>${esc(d.title)}</h2>
+      <div class="eyebrow">${i===0?"День 0":"День "+i} · ${dt(addD(tripStart(),i))}</div><h2>${esc(d.title)}</h2>
       ${d.text?`<p>${esc(d.text)}</p>`:""}</div>
       ${d.route?`<a class="btn" href="${d.route[0]}" target="_blank" rel="noopener">🗺 ${esc(d.route[1])}</a>`:""}</div>`;
     if(d.drive||d.wx) h+=`<div class="timeline">${d.drive?`<span class="chip">🚗 ${esc(d.drive)}</span>`:""}${d.wx?`<span class="chip">🌡 ${esc(d.wx)}</span>`:""}${i>0?`<button class="chip" data-mapday="${d.id}">📍 На мапі</button>`:""}</div>`;
     if(d.timeline) h+=`<div class="timeline">${d.timeline.map(t=>`<span class="chip"><b>${t[0]}</b> ${esc(t[1])}</span>`).join("")}</div>`;
-    if(d.flights){
-      const airports=[...new Set(FLIGHTS.out.map(f=>f.f))];
-      h+=`<h3 class="row-title">Рейси в Осло <small>ціна разом з дорогою до центру · натисни, щоб врахувати в бюджеті</small></h3>
-      <div class="filters" id="apf"><button aria-pressed="true" data-ap="all">Усі</button><button aria-pressed="false" data-ap="to:OSL">✈ Лише Ґардермуен</button><button aria-pressed="false" data-ap="to:TRF">Торп</button>${airports.map(a=>`<button aria-pressed="false" data-ap="${a}">з ${a}</button>`).join("")}</div>
-      <div class="flights" id="outList"></div>`;
-    }
+    if(d.flights) h+=`<div class="chosen-fl" id="outChosen"></div>`;
     if(d.places) h+=`<h3 class="row-title">Що бачимо</h3><div class="grid">${d.places.map(p=>`
       <div class="card"><div class="ph">${photo(p[0],p[1])}${favBtn("pl-"+p[0])}</div>
       <div class="meta"><div class="l1"><span>${esc(p[1])}</span></div><div class="muted">${esc(p[2])}</div>
@@ -568,10 +599,7 @@ function renderDays(){
     if(d.ret) h+=`<div class="day-head" style="margin-top:12px"><p id="retTxt"></p>
       <a class="btn" id="retMap" target="_blank" rel="noopener"></a></div>
       <div class="grid" style="margin-top:16px" id="retPlaces"></div>
-      <h3 class="row-title">Рейси додому <small>ціна разом з дорогою до аеропорту</small></h3>
-      <div class="filters" id="bpf"><button aria-pressed="true" data-bp="all">Усі</button><button aria-pressed="false" data-bp="OSL">✈ Лише Ґардермуен</button><button aria-pressed="false" data-bp="TRF">Торп</button></div>
-      <div class="flights" id="backList"></div>
-      <p class="note">Повернення дорожче за переліт туди: у неділю 21.03 квитки дорожчають. З Ґардермуена в Краків від 110 €, тому навіть з автобусом Торп виходить дешевше. 22.03 означає ще одну ніч в Осло.</p>
+      <div class="chosen-fl" id="backChosen"></div>
       <div class="info">
         <div class="box"><h4>🌡 Погода в березні</h4><div class="temps">${WX.map(t=>`<div style="height:${(t[2]+11)*4}px"><span>${t[1]}…${t[2]>0?"+":""}${t[2]}°</span></div>`).join("")}</div>
           <p style="display:flex;justify-content:space-between;gap:4px;margin-top:4px;font-size:11px">${WX.map(t=>`<span>${t[0]}</span>`).join("")}</p>
@@ -580,11 +608,7 @@ function renderDays(){
         <div class="box"><h4>🍝 Їжа</h4><p>Готуємо самі в будинках (Rema 1000, Kiwi, Coop Extra). Кафе коштує 25–40 € за обід, алкоголь бери в duty free.</p></div></div>`;
     return h+"</section>";
   }).join("");
-  renderFlights(); renderStays(); renderReturn(); renderCar();
-}
-function renderFlights(ap){
-  ap=ap||document.querySelector("#apf [aria-pressed=true]")?.dataset.ap||"all";
-  $("#outList").innerHTML=FLIGHTS.out.map((f,i)=>ap==="all"||f.f===ap||ap==="to:"+f.t?flightCard(f,i,"out",S.out===i):"").join("");
+  renderChosen(); renderStays(); renderReturn(); renderCar();
 }
 function renderStays(){
   document.querySelectorAll("[data-stays]").forEach(g=>{
@@ -592,18 +616,13 @@ function renderStays(){
     g.innerHTML=list.length?list.map((s,i)=>stayCard(s,i,k)).join(""):'<p class="note">Житло ще шукається.</p>';
   });
 }
-function backList(){return S.ret==="A"?FLIGHTS.backBergen:FLIGHTS.backOslo}
 function renderReturn(){
   const A=S.ret==="A";
   $("#retTxt").textContent=A
-    ?"Здаємо авто в аеропорту Бергена. 20.03 прямих рейсів у Польщу немає, тож або ще одна ніч у Бергені й виліт 21.03 зранку, або виліт 19.03 увечері. Дорожче: рейс 80–120 €, плюс one-way плата за авто й ще одна ніч."
-    :"~8 годин назад до Осло через плато Гардангервідда (Rv7, ~460 км). У березні його іноді закривають або пускають колоною, тоді їдемо E16 через Лердал (~490 км). Авто здаємо в Осло, ночуємо там, а 21.03 летимо додому. Це дешевший варіант.";
+    ?"Здаємо авто в аеропорту Бергена й летимо звідти. Прямих рейсів у Польщу з Бергена мало, тож дата може зсунутися на день. Дорожче: плюс one-way плата за авто."
+    :"~8 годин назад до Осло через плато Гардангервідда (Rv7, ~460 км). У березні його іноді закривають або пускають колоною, тоді їдемо E16 через Лердал (~490 км). Авто здаємо в Осло, ночуємо там і наступного дня летимо додому. Це дешевший варіант.";
   const m=$("#retMap"); m.href=A?M("Bergen Airport Flesland"):R("Bergen","Oslo",["Hardangervidda","Geilo"]); m.textContent=A?"🗺 Аеропорт Бергена":"🗺 Берген → Осло через Гардангервідду";
   $("#retPlaces").innerHTML=A?"":`<div class="card"><div class="ph">${photo("vidda","Hardangervidda")}${favBtn("pl-vidda")}</div><div class="meta"><div class="l1"><span>Гардангервідда</span></div><div class="muted">Найбільше плато Європи, сніг до горизонту</div><div class="links"><a href="${M("Hardangervidda")}" target="_blank" rel="noopener">Google Maps ↗</a></div></div></div>`;
-  const L=backList(); if(S.back>=L.length) S.back=0;
-  const bp=document.querySelector("#bpf [aria-pressed=true]")?.dataset.bp||"all";
-  $("#bpf").hidden=A;
-  $("#backList").innerHTML=L.map((f,i)=>A||bp==="all"||f.f===bp?flightCard(f,i,"back",S.back===i):"").join("");
   $("#retB").setAttribute("aria-pressed",!A); $("#retA").setAttribute("aria-pressed",A);
 }
 function renderCar(){
@@ -614,9 +633,9 @@ function renderCar(){
 /* ======== BUDGET ======== */
 function budget(){
   const n=S.ppl,c=cars(),A=S.ret==="A";
-  const fo=FLIGHTS.out[S.out]||FLIGHTS.out[0], fb=backList()[S.back]||backList()[0];
-  const fp=ticket;
-  const trEur=TRANSFER[nAp(fo)][0]+TRANSFER[nAp(fb)][0];
+  const {o:fo,b:fb}=chosen();
+  const fp=f=>f?f.p:0;
+  const trEur=(fo?TRANSFER[nAp(fo)][0]:0)+(fb?TRANSFER[nAp(fb)][0]:0);
   const days=A?6:5, km=A?750:1250;
   const car=(c*(days*75+(A?250:0)+km*0.14+(A?35:60)))/n;
   let st=0; ["N3","N4","N5","N6"].forEach(k=>{const s=STAYS[k][S.stay[k]]; if(s) st+=s.priceUah*UAH});
@@ -629,7 +648,7 @@ function budget(){
   $("#tot").innerHTML=`${eur(tot)} <small>/ людина</small>`;
   $("#why").textContent=`${n} людей · ${c} авто · ${A?"летимо з Бергена":"назад через Осло"} · без житла в Осло`;
   $("#bt").innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${eur(r[1])}</td></tr>`).join("")+`<tr><td>Разом</td><td>${eur(tot)}</td></tr>`;
-  $("#bnote").textContent="Рейси й житло ті, що ти обрав на сторінці. Авто: ~75 € за день за машину, пальне ~0,14 €/км. Ціни на 15.11.2026.";
+  $("#bnote").textContent="Рейси (блок «Квитки» вгорі) і житло ті, що ти обрав на сторінці. Авто: ~75 € за день за машину, пальне ~0,14 €/км. Ціни на 15.11.2026.";
   $("#whoLabel").textContent=n+" людей"; $("#ppl").textContent=n;
   $("#minus").disabled=n<=3; $("#plus").disabled=n>=9;
   drawMap();
@@ -640,16 +659,18 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("button,a"); if(!t) return;
   if(t.tagName==="A") return;
   if(t.dataset.fav){S.fav[t.dataset.fav]=!S.fav[t.dataset.fav];t.setAttribute("aria-pressed",S.fav[t.dataset.fav]);save();return}
-  if(t.dataset.fl){const[k,i]=t.dataset.fl.split(":");S[k]=+i;save();k==="out"?renderFlights():renderReturn();budget();return}
+  if(t.dataset.from){const c=t.dataset.from,cur=S.from||defSel(outsAll());S.from=cur.includes(c)?(cur.length>1?cur.filter(x=>x!==c):cur):cur.concat(c);save();renderCombos();return}
+  if(t.dataset.to){const c=t.dataset.to,cur=S.to||defSel(backsAll());S.to=cur.includes(c)?(cur.length>1?cur.filter(x=>x!==c):cur):cur.concat(c);save();renderCombos();return}
+  if(t.dataset.n){S.nights=+t.dataset.n;save();renderCombos();return}
+  if(t.dataset.day!==undefined){S.day=t.dataset.day||null;save();renderCombos();return}
+  if(t.dataset.pick){[S.po,S.pb]=t.dataset.pick.split("|");save();renderCombos();renderDays();budget();return}
   if(t.dataset.stay){const[k,i]=t.dataset.stay.split(":");S.stay[k]=+i;save();renderStays();budget();return}
-  if(t.dataset.ap){document.querySelectorAll("#apf button").forEach(b=>b.setAttribute("aria-pressed",b===t));renderFlights(t.dataset.ap);return}
-  if(t.dataset.bp){document.querySelectorAll("#bpf button").forEach(b=>b.setAttribute("aria-pressed",b===t));renderReturn();return}
   if(t.dataset.go){go(t.dataset.go,true);return}
   if(t.dataset.mf){focusMap(t.dataset.mf);return}
   if(t.dataset.tiles){setTiles(t.dataset.tiles);return}
   if(t.dataset.mapday){document.getElementById("map-sec").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"});setTimeout(()=>focusMap(t.dataset.mapday),350);return}
-  if(t.id==="minus"||t.id==="plus"){S.ppl=Math.min(9,Math.max(3,S.ppl+(t.id==="plus"?1:-1)));save();renderStays();renderFlights();renderReturn();renderCar();budget();return}
-  if(t.id==="retA"||t.id==="retB"){S.ret=t.id==="retA"?"A":"B";S.back=0;save();renderReturn();renderCar();budget();return}
+  if(t.id==="minus"||t.id==="plus"){S.ppl=Math.min(9,Math.max(3,S.ppl+(t.id==="plus"?1:-1)));save();renderStays();renderReturn();renderCar();budget();return}
+  if(t.id==="retA"||t.id==="retB"){S.ret=t.id==="retA"?"A":"B";S.pb=null;S.to=null;save();renderCombos();renderDays();budget();return}
   if(t.id==="themeBtn"){const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark";return}
 });
 function go(id,push){
@@ -735,8 +756,8 @@ function drawMap(){
     add(id,L.marker([s.lat,s.lng],{icon:L.divIcon({className:"",html:'<div class="pin">🏠</div>',iconSize:[30,30],iconAnchor:[15,15]})})
       .bindPopup(popup(s.photo,s.name,`Ніч після дня ${dayNo(id)} · ${s.place} · ${eur(s.priceUah*UAH/S.ppl)}/люд.`,`<a href="${s.url}" target="_blank" rel="noopener">Airbnb ↗</a>`)));
   });
-  const fo=FLIGHTS.out[S.out]||FLIGHTS.out[0], fb=backList()[S.back]||backList()[0];
-  [[nAp(fo),"day-0","прилітаємо"],[nAp(fb),A?"day-7":"day-7","летимо додому"]].forEach(([ap,id,t])=>{
+  const {o:fo,b:fb}=chosen();
+  [[fo&&nAp(fo),"day-0","прилітаємо"],[fb&&nAp(fb),"day-7","летимо додому"]].forEach(([ap,id,t])=>{
     const a=AIRPORTS[ap]; if(!a) return;
     add(id,L.marker([a[0],a[1]],{icon:L.divIcon({className:"",html:'<div class="pin">✈️</div>',iconSize:[30,30],iconAnchor:[15,15]})})
       .bindPopup(popup("",a[2],t,`<a href="${M(a[2]+" airport")}" target="_blank" rel="noopener">Google Maps ↗</a>`)));
@@ -755,7 +776,8 @@ function focusMap(id){
 }
 
 /* ======== BOOT ======== */
-renderHero(); renderCats(); renderDays(); initMap(); budget();
+renderHero(); renderCats(); renderCombos(); renderDays(); initMap(); budget();
+$("#onlyFree").addEventListener("change",e=>{S.onlyFree=e.target.checked;save();renderCombos()});
 document.querySelectorAll("section.day").forEach(s=>io.observe(s));
 if(location.hash) setTimeout(()=>go(location.hash.slice(1)),50);
 window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
@@ -784,6 +806,7 @@ window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
         <span class="muted">${w.busy.length ? "" : "ніхто не поставив «не можу» · "}${who}</span>${core}`;
     }
     WhoWhen.timeline(tl, people, { highlight: new Set(total ? w.span : []) });
+    if (total && !w.busy.length && window.setFreeSpan) setFreeSpan(w.span);
   } catch (e) {
     best.textContent = "Не вдалося завантажити дати. Відкрий сторінку вибору днів.";
   }
