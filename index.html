@@ -186,6 +186,19 @@ footer a{color:var(--muted)}
 .when-best{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;margin:0 0 12px;font-size:15px}
 .when-best b{font-size:17px}
 .when-best .muted{color:var(--muted);font-size:13px}
+.tix-h{margin:22px 0 4px;font-size:18px}
+.tix-note{color:var(--muted);font-size:13px;margin:0 0 12px;max-width:80ch}
+.tix{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.tk{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--card);display:flex;flex-direction:column;gap:8px;min-width:0}
+.tk.top{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.tk .hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.tk .hd b{font-size:16px}
+.tk .tot{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tk .sub2{color:var(--muted);font-size:12px}
+.tk .leg{display:grid;grid-template-columns:auto 1fr auto;gap:2px 10px;font-size:13px;font-variant-numeric:tabular-nums;align-items:baseline}
+.tk .leg span:nth-child(2){color:var(--muted);min-width:0}
+.tk .leg a{color:var(--fg);font-weight:600;white-space:nowrap}
+.tk .tag{display:inline-block;font-size:11px;font-weight:700;background:var(--accent);color:#fff;border-radius:999px;padding:2px 8px;width:max-content}
 #map.dim:not(.sat) .leaflet-tile-pane{filter:brightness(.72) contrast(1.05) saturate(.85)}
 #map{height:440px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);z-index:0}
 .leaflet-container{font-family:var(--font);background:var(--surface)}
@@ -240,6 +253,40 @@ footer a{color:var(--muted)}
       <a class="btn primary" href="dates.html">🗓 Обрати свої дні</a></div>
     <div class="when-best" id="whenBest">Завантажую, хто коли може…</div>
     <div id="whenTL"></div>
+    <h3 class="tix-h">✈️ Найдешевші квитки на 11–25 березня</h3>
+    <p class="tix-note">Ці дні зараз нікому не заважають. Тільки Ґардермуен (OSL), без Торпа. Ціна за одну людину в обидва боки, лише рюкзак під сидіння. Ціни Kiwi.com на 24 листопада 2026, вони зміняться. Назад до Кракова й Варшави дорого (~95 €), тому вигідніше летіти через Гданськ.</p>
+    <div class="tix">
+      <div class="tk top"><span class="tag">Найдешевше</span>
+        <div class="hd"><b>Гданськ ⇄ Осло</b><span class="tot">51 €</span></div>
+        <div class="sub2">7 ночей · 15–22 березня</div>
+        <div class="leg"><span>→ 15.03</span><span>GDN 06:00 → OSL 07:25 · Wizz Air</span><a href="https://kiwi.com/u/6u3rnsu9px" target="_blank" rel="noopener">20 € ↗</a><span>← 22.03</span><span>OSL 12:40 → GDN 14:15 · Wizz Air</span><a href="https://kiwi.com/u/4jgpm9cr9n" target="_blank" rel="noopener">31 € ↗</a></div>
+      </div>
+      <div class="tk">
+        <div class="hd"><b>Гданськ ⇄ Осло</b><span class="tot">52 €</span></div>
+        <div class="sub2">6 ночей · 16–22 березня</div>
+        <div class="leg"><span>→ 16.03</span><span>GDN 12:05 → OSL 13:35 · Norwegian</span><a href="https://kiwi.com/u/825bmcr8gy" target="_blank" rel="noopener">21 € ↗</a><span>← 22.03</span><span>OSL 12:40 → GDN 14:15 · Wizz Air</span><a href="https://kiwi.com/u/4jgpm9cr9n" target="_blank" rel="noopener">31 € ↗</a></div>
+      </div>
+      <div class="tk">
+        <div class="hd"><b>Краків → Осло → Гданськ</b><span class="tot">52 €</span></div>
+        <div class="sub2">6 ночей · 16–22 березня · назад в інше місто</div>
+        <div class="leg"><span>→ 16.03</span><span>KRK 12:45 → OSL 14:50 · Norwegian</span><a href="https://kiwi.com/u/m3y9c3s9kj" target="_blank" rel="noopener">21 € ↗</a><span>← 22.03</span><span>OSL 12:40 → GDN 14:15 · Wizz Air</span><a href="https://kiwi.com/u/4jgpm9cr9n" target="_blank" rel="noopener">31 € ↗</a></div>
+      </div>
+      <div class="tk">
+        <div class="hd"><b>Гданськ ⇄ Осло</b><span class="tot">57 €</span></div>
+        <div class="sub2">7 ночей · 14–21 березня</div>
+        <div class="leg"><span>→ 14.03</span><span>GDN 06:00 → OSL 07:40 · Wizz Air</span><a href="https://kiwi.com/u/tcf6jjh48f" target="_blank" rel="noopener">20 € ↗</a><span>← 21.03</span><span>OSL 17:55 → GDN 19:30 · Wizz Air</span><a href="https://kiwi.com/u/wgb5dwj73z" target="_blank" rel="noopener">37 € ↗</a></div>
+      </div>
+      <div class="tk">
+        <div class="hd"><b>Краків ⇄ Осло</b><span class="tot">115 €</span></div>
+        <div class="sub2">6 ночей · 16–22 березня</div>
+        <div class="leg"><span>→ 16.03</span><span>KRK 12:45 → OSL 14:50 · Norwegian</span><a href="https://kiwi.com/u/m3y9c3s9kj" target="_blank" rel="noopener">21 € ↗</a><span>← 22.03</span><span>OSL 15:50 → KRK 18:05 · Wizz Air</span><a href="https://kiwi.com/u/nrjkm5s9gu" target="_blank" rel="noopener">94 € ↗</a></div>
+      </div>
+      <div class="tk">
+        <div class="hd"><b>Варшава ⇄ Осло</b><span class="tot">127 €</span></div>
+        <div class="sub2">6 ночей · 12–18 березня</div>
+        <div class="leg"><span>→ 12.03</span><span>WAW 12:05 → OSL 14:00 · Norwegian</span><a href="https://kiwi.com/u/sup7zhdkzg" target="_blank" rel="noopener">31 € ↗</a><span>← 18.03</span><span>OSL 09:35 → WAW 11:25 · Norwegian</span><a href="https://kiwi.com/u/bqbv33xxvq" target="_blank" rel="noopener">96 € ↗</a></div>
+      </div>
+    </div>
   </section>
   <section class="mapwrap" id="map-sec" aria-label="Мапа маршруту">
     <div class="map-head"><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><h2>Маршрут на мапі</h2>
