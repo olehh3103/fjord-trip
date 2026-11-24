@@ -277,6 +277,7 @@ footer a{color:var(--muted)}
       <div class="cmb-row"><span class="cmb-l">Куди повертаємось</span><div class="filters" id="toF"></div></div>
       <div class="cmb-row"><span class="cmb-l">Ночей у Норвегії</span><div class="filters" id="nightsF"></div></div>
     </div>
+    <div class="when-best" id="sharedPick"></div>
     <div class="tix" id="combos"></div>
   </section>
   <section class="mapwrap" id="map-sec" aria-label="Мапа маршруту">
@@ -526,9 +527,12 @@ function renderCombos(){
       <div class="hd"><b>${title}</b><span class="tot">${c.p} €</span></div>
       <div class="sub2">${nightsOf(c.o.d,c.b.d)} ночей · ${+c.o.d.slice(8)}–${+c.b.d.slice(8)} березня${c.b.f==="BGO"?" · назад з Бергена":""}${FAR.has(c.o.f)||FAR.has(c.b.t)?" · Гданськ далеко від України":""}</div>
       <div class="leg">${leg("→",c.o)}${leg("←",c.b)}</div>
-      <button class="pick2" data-pick="${fkey(c.o)}|${fkey(c.b)}">${on?"✓ Обрано, враховано в бюджеті":"Обрати"}</button></div>`;
+      <button class="pick2" data-pick="${fkey(c.o)}|${fkey(c.b)}">${on?(TRIP&&TRIP.po===fkey(c.o)&&TRIP.pb===fkey(c.b)?"✓ Обрано для всіх":"Найдешевше · обрати для всіх"):"Обрати для всіх"}</button></div>`;
   }).join(""):`<div class="tix-empty">Під ці фільтри немає квитків до 50 € в одну сторону. Спробуй іншу кількість ночей або інше місто.</div>`;
-  $("#flNote").textContent=`Прямі рейси з Польщі в Ґардермуен (OSL) і назад, квитки до 50 € в одну сторону, лише в дні, коли всі можуть. Ціна за одну людину в обидва боки, тільки рюкзак під сидіння, Kiwi.com на ${FL_DATE}. Повертатися можна в інше місто, ніж вилітали. Бронює кожен сам.`;
+  const so=TRIP&&FL.find(f=>fkey(f)===TRIP.po), sb=TRIP&&FL.find(f=>fkey(f)===TRIP.pb);
+  $("#sharedPick").innerHTML=so&&sb?`<span>✅ Для всіх обрано:</span> <b>${so.p+sb.p} €</b> <span>${PL[so.f]} ${ddm(so.d)} ${so.dep} → Осло → ${PL[sb.t]} ${ddm(sb.d)} ${sb.dep} (${nightsOf(so.d,sb.d)} ноч.)</span> <span class="muted">змінено ${new Date(TRIP.at).toLocaleString("uk-UA",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</span>`
+    :`<span class="muted">Ще ніхто не обрав рейс для всіх. Натисни «Обрати для всіх» на картці.</span>`;
+  $("#flNote").textContent=`Прямі рейси з Польщі в Ґардермуен (OSL) і назад, квитки до 50 € в одну сторону, лише в дні, коли всі можуть. Ціна за одну людину в обидва боки, тільки рюкзак під сидіння, Kiwi.com на ${FL_DATE}. Повертатися можна в інше місто, ніж вилітали. «Обрати для всіх» змінює варіант у всіх, хто відкриє сайт. Бронює кожен сам.`;
 }
 function renderChosen(){
   const {o,b}=chosen();
@@ -539,6 +543,23 @@ function renderChosen(){
   const pill=$("#whenPill");
   if(pill&&o&&b) pill.textContent=`${+o.d.slice(8)}–${+b.d.slice(8)} березня 2027`;
 }
+/* Обраний варіант спільний для всіх: зберігається у Firebase (norway2027/trip) */
+const TRIP_URL="https://norway-dates-default-rtdb.europe-west1.firebasedatabase.app/norway2027/trip.json";
+let TRIP=null;
+function applyTrip(t){
+  if(!t||!t.po||!t.pb) return;
+  const same=t.po===S.po&&t.pb===S.pb; TRIP=t;
+  S.po=t.po; S.pb=t.pb; save(); renderCombos();
+  if(!same){renderDays();budget()}
+}
+function loadTrip(){fetch(TRIP_URL+"?x="+Date.now()).then(r=>r.json()).then(applyTrip).catch(()=>{})}
+function shareTrip(){
+  const t={po:S.po,pb:S.pb,at:Date.now()}; TRIP=t;
+  fetch(TRIP_URL,{method:"PUT",body:JSON.stringify(t)}).catch(()=>{});
+}
+loadTrip();
+try{const es=new EventSource(TRIP_URL);es.addEventListener("put",e=>{const m=JSON.parse(e.data);m.path==="/"?applyTrip(m.data):loadTrip()});es.addEventListener("patch",loadTrip)}catch(e){}
+setInterval(loadTrip,30000);
 window.setFreeSpan=span=>{FREE=span&&span.length?new Set(span):null;renderCombos();if(!S.po){renderDays();budget()}};
 function tripStart(){return chosen().o?.d||"2027-03-13"}
 function stayCard(s,i,key){
@@ -643,7 +664,7 @@ document.addEventListener("click",e=>{
   if(t.dataset.to){const c=t.dataset.to,cur=S.toSel||defSel(backsAll());S.toSel=cur.includes(c)?(cur.length>1?cur.filter(x=>x!==c):cur):cur.concat(c);save();renderCombos();return}
   if(t.dataset.n){const n=+t.dataset.n,cur=S.nightsSel;S.nightsSel=cur.includes(n)?(cur.length>1?cur.filter(x=>x!==n):cur):cur.concat(n).sort();save();renderCombos();return}
   if(t.dataset.day!==undefined){S.day=t.dataset.day||null;save();renderCombos();return}
-  if(t.dataset.pick){[S.po,S.pb]=t.dataset.pick.split("|");save();renderCombos();renderDays();budget();return}
+  if(t.dataset.pick){[S.po,S.pb]=t.dataset.pick.split("|");save();shareTrip();renderCombos();renderDays();budget();return}
   if(t.dataset.stay){const[k,i]=t.dataset.stay.split(":");S.stay[k]=+i;save();renderStays();budget();return}
   if(t.dataset.go){go(t.dataset.go,true);return}
   if(t.dataset.mf){focusMap(t.dataset.mf);return}
