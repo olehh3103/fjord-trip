@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Норвегія · коли їдемо</title>
+<meta name="description" content="Обираємо дати поїздки в Норвегію: кожен відмічає, коли може і коли ні">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff;--surface:#f7f7f7;--card:#ffffff;--fg:#222222;--muted:#6a6a6a;--line:#e6e6e6;
+  --accent:#e0435e;--accent-ink:#ffffff;--accent-soft:#fdecef;
+  --yes:#1f7a55;--yes-soft:#dff3e9;--no:#c23a3a;--no-soft:#fbe3e3;
+  --shadow:0 6px 20px rgba(0,0,0,.08);
+  --font:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--r:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141414;--surface:#1d1d1d;--card:#1b1b1b;--fg:#f1f1f1;--muted:#a3a3a3;--line:#2e2e2e;
+    --accent:#ff5c77;--accent-soft:#3a1d24;--yes:#4cc38a;--yes-soft:#16301f;--no:#ff6b6b;--no-soft:#3a1c1c;
+    --shadow:0 6px 20px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141414;--surface:#1d1d1d;--card:#1b1b1b;--fg:#f1f1f1;--muted:#a3a3a3;--line:#2e2e2e;
+  --accent:#ff5c77;--accent-soft:#3a1d24;--yes:#4cc38a;--yes-soft:#16301f;--no:#ff6b6b;--no-soft:#3a1c1c;
+  --shadow:0 6px 20px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);line-height:1.45}
+.wrap{max-width:980px;margin:0 auto;padding:28px 16px 64px}
+header h1{font-size:clamp(26px,5vw,38px);margin:0 0 6px;font-weight:800;letter-spacing:-.02em}
+header p{margin:0;color:var(--muted)}
+.back{display:inline-block;margin-bottom:14px;color:var(--muted);text-decoration:none;font-size:14px}
+.back:hover{color:var(--accent)}
+.banner{margin:18px 0 0;padding:10px 14px;border-radius:10px;background:var(--accent-soft);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-top:18px;box-shadow:var(--shadow)}
+.card h2{margin:0 0 12px;font-size:18px;font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+input[type=text]{font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);min-width:0;flex:1 1 200px}
+input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:9px 14px;font-weight:600}
+button:hover{border-color:var(--muted)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{padding:6px 12px;border-radius:999px;font-weight:600;font-size:14px}
+.chip.active{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.chip small{font-weight:500;opacity:.7;margin-left:4px}
+.muted{color:var(--muted);font-size:14px}
+.modes{display:flex;gap:8px;flex-wrap:wrap}
+.mode{display:flex;align-items:center;gap:6px}
+.mode .dot{width:12px;height:12px;border-radius:4px;display:inline-block}
+.mode.yes .dot{background:var(--yes)} .mode.no .dot{background:var(--no)} .mode.clear .dot{border:2px solid var(--muted)}
+.mode.active.yes{background:var(--yes-soft);border-color:var(--yes)}
+.mode.active.no{background:var(--no-soft);border-color:var(--no)}
+.mode.active.clear{background:var(--surface);border-color:var(--fg)}
+.toolbar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.status{font-size:13px;color:var(--muted);min-height:1em}
+.months{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+.month h3{margin:0 0 8px;font-size:15px;font-weight:700;text-transform:capitalize}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;user-select:none;-webkit-user-select:none}
+.wd{font-size:11px;color:var(--muted);text-align:center;padding-bottom:2px;font-weight:600}
+.day{position:relative;aspect-ratio:1/1;border-radius:9px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:600;font-size:14px;cursor:pointer;padding:0;transition:transform .05s}
+.day:active{transform:scale(.94)}
+.day.off{visibility:hidden;pointer-events:none}
+.day.out{opacity:.28;cursor:default;pointer-events:none;background:transparent}
+.day.we{color:var(--accent)}
+.day.yes{background:var(--yes);border-color:var(--yes);color:#fff}
+.day.no{background:var(--no);border-color:var(--no);color:#fff}
+.day .cnt{font-size:9.5px;font-weight:600;line-height:1;margin-top:2px;opacity:.85;white-space:nowrap}
+.day.heat{color:var(--fg);cursor:default}
+.day.heat.hot{color:#fff}
+.day.best{outline:2.5px solid var(--accent);outline-offset:1px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--muted);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.windows{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.win{border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:var(--surface)}
+.win.sel{border-color:var(--accent);background:var(--accent-soft)}
+.win b{font-size:16px}
+.win .who{font-size:13px;color:var(--muted);margin-top:4px}
+.win .who .y{color:var(--yes);font-weight:600} .win .who .n{color:var(--no);font-weight:600}
+.len{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.len input{accent-color:var(--accent);width:180px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.num{font-variant-numeric:tabular-nums}
+td.act{text-align:right;white-space:nowrap}
+td.act button{padding:5px 10px;font-size:13px}
+.empty{color:var(--muted);font-size:14px;padding:6px 0}
+@media (max-width:420px){.day{font-size:13px;border-radius:7px}.day .cnt{font-size:8.5px}.grid{gap:3px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="./">← до маршруту</a>
+    <h1>Коли їдемо в Норвегію? 🇳🇴</h1>
+    <p>Відміть дні з <b>15 лютого</b> по <b>15 квітня 2027</b>: коли можеш і коли точно ні. Нижче видно, який проміжок підходить усім.</p>
+    <div class="banner" id="banner" hidden></div>
+  </header>
+
+  <section class="card">
+    <h2>1. Хто ти?</h2>
+    <form class="row" id="nameForm" autocomplete="off">
+      <input type="text" id="nameInput" placeholder="Твоє ім'я" maxlength="30">
+      <button class="primary" type="submit">Це я</button>
+    </form>
+    <div class="chips" id="people"></div>
+    <p class="muted" id="peopleHint" style="margin:10px 0 0">Натисни на ім'я, щоб відкрити або змінити дати цієї людини.</p>
+  </section>
+
+  <section class="card" id="editCard">
+    <div class="toolbar">
+      <h2 style="margin:0" id="editTitle">2. Твої дати</h2>
+      <div class="modes" role="radiogroup" aria-label="Що відмічаємо">
+        <button class="mode yes active" data-mode="y" type="button"><span class="dot"></span>Можу</button>
+        <button class="mode no" data-mode="n" type="button"><span class="dot"></span>Не можу</button>
+        <button class="mode clear" data-mode="" type="button"><span class="dot"></span>Стерти</button>
+      </div>
+    </div>
+    <p class="muted" style="margin:-4px 0 14px">Обери режим і натискай на дні (мишкою можна провести по кількох). Повторне натискання знімає позначку. Цифри під датою: скільки людей можуть ✓ / не можуть ✗.</p>
+    <div class="months" id="editCal"></div>
+    <div class="toolbar" style="margin:14px 0 0">
+      <div class="row">
+        <button type="button" id="fillRest">Решта днів → «можу»</button>
+        <button type="button" id="clearAll">Очистити все</button>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>3. Загальна картина</h2>
+    <div class="len">
+      <label for="len">Тривалість поїздки:</label>
+      <input type="range" id="len" min="3" max="14" value="7">
+      <b id="lenVal">7 днів</b>
+    </div>
+    <div class="windows" id="windows"></div>
+    <div class="months" id="heatCal" style="margin-top:18px"></div>
+    <div class="legend">
+      <span><i style="background:var(--yes)"></i>усі, хто відмітився, можуть</span>
+      <span><i style="background:var(--yes-soft)"></i>частина може</span>
+      <span><i style="background:var(--no)"></i>хтось не може</span>
+      <span><i style="background:var(--surface);border:1px solid var(--line)"></i>ніхто не відмітив</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Учасники</h2>
+    <div id="table"></div>
+  </section>
+</div>
+
+<script>
+/* ===== Налаштування =====
+   firebaseUrl: адреса Firebase Realtime Database, напр.
+   "https://norway-dates-default-rtdb.europe-west1.firebasedatabase.app"
+   Порожньо → демо-режим (дані лише в цьому браузері). */
+const CONFIG = { firebaseUrl: "", path: "norway2027" };
+
+const START = new Date(2027, 1, 15), END = new Date(2027, 3, 15);
+const MONTHS = [[2027,1],[2027,2],[2027,3]];
+const WD = ["Пн","Вт","Ср","Чт","Пт","Сб","Нд"];
+const MON_GEN = ["січня","лютого","березня","квітня","травня","червня","липня","серпня","вересня","жовтня","листопада","грудня"];
+const MON_NOM = ["січень","лютий","березень","квітень","травень","червень","липень","серпень","вересень","жовтень","листопад","грудень"];
+
+const $ = s => document.querySelector(s);
+const pad = n => String(n).padStart(2,"0");
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const allDays = (() => { const a=[]; for (let d=new Date(START); d<=END; d.setDate(d.getDate()+1)) a.push(iso(d)); return a; })();
+const inRange = k => k >= allDays[0] && k <= allDays[allDays.length-1];
+const fmt = k => { const [y,m,d]=k.split("-").map(Number); return `${d} ${MON_GEN[m-1]}`; };
+const keyOf = name => encodeURIComponent(name.trim().toLowerCase()).replace(/\./g,"%2E");
+const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ls = { get(k){ try{return localStorage.getItem(k)}catch(e){return null} }, set(k,v){ try{localStorage.setItem(k,v)}catch(e){} } };
+
+/* ===== Сховище ===== */
+const remote = !!CONFIG.firebaseUrl;
+const base = CONFIG.firebaseUrl.replace(/\/$/,"") + "/" + CONFIG.path + "/people";
+const store = {
+  async load(){
+    if (!remote) { try { return JSON.parse(ls.get("nd-people")||"{}"); } catch(e){ return {}; } }
+    const r = await fetch(base + ".json"); if (!r.ok) throw new Error(r.status);
+    return (await r.json()) || {};
+  },
+  async save(key, person){
+    if (!remote) { const all = JSON.parse(ls.get("nd-people")||"{}"); if (person) all[key]=person; else delete all[key]; ls.set("nd-people", JSON.stringify(all)); return; }
+    const r = await fetch(`${base}/${key}.json`, { method: person ? "PUT" : "DELETE", body: person ? JSON.stringify(person) : undefined });
+    if (!r.ok) throw new Error(r.status);
+  },
+  watch(cb){
+    if (!remote) return;
+    if ("EventSource" in window) {
+      const es = new EventSource(base + ".json");
+      const on = () => cb(); es.addEventListener("put", on); es.addEventListener("patch", on);
+      es.onerror = () => {}; // браузер сам перепідключиться
+    }
+    setInterval(cb, 30000);
+  }
+};
+
+/* ===== Стан ===== */
+let people = {};          // key -> {name, days:{iso:"y"|"n"}, updated}
+let me = ls.get("nd-me") || "";   // ключ людини, яку редагуємо
+let mode = "y";
+let dirty = new Set();    // ключі, що чекають на збереження
+let saveTimer = null;
+let bestSel = 0;
+
+function setStatus(t){ $("#status").textContent = t; }
+
+async function refresh(){
+  if (dirty.size) return; // не перетираємо незбережені зміни
+  try {
+    const data = await store.load();
+    people = data; render();
+  } catch(e){ setStatus("Не вдалося завантажити дані, спробую ще раз…"); }
+}
+
+function scheduleSave(key){
+  dirty.add(key); setStatus("Зберігаю…");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    const keys = [...dirty];
+    try {
+      for (const k of keys) await store.save(k, people[k] || null);
+      keys.forEach(k => dirty.delete(k));
+      setStatus(remote ? "Збережено ✓" : "Збережено в цьому браузері ✓");
+    } catch(e){ setStatus("⚠️ Не збереглося, перевір інтернет"); setTimeout(()=>scheduleSave(keys[0]), 4000); }
+  }, 500);
+}
+
+/* ===== Календарі ===== */
+function buildMonths(container, cellFn){
+  container.innerHTML = "";
+  for (const [y,m] of MONTHS) {
+    const box = document.createElement("div"); box.className = "month";
+    box.innerHTML = `<h3>${MON_NOM[m]} ${y}</h3>`;
+    const g = document.createElement("div"); g.className = "grid";
+    WD.forEach(w => { const e=document.createElement("div"); e.className="wd"; e.textContent=w; g.appendChild(e); });
+    const first = new Date(y,m,1), offset = (first.getDay()+6)%7, n = new Date(y,m+1,0).getDate();
+    for (let i=0;i<offset;i++){ const e=document.createElement("div"); e.className="day off"; g.appendChild(e); }
+    for (let d=1; d<=n; d++){
+      const k = `${y}-${pad(m+1)}-${pad(d)}`;
+      const e = document.createElement("button"); e.type="button"; e.className="day"; e.dataset.k=k;
+      const wd = new Date(y,m,d).getDay(); if (wd===0||wd===6) e.classList.add("we");
+      if (!inRange(k)) { e.classList.add("out"); e.tabIndex=-1; e.textContent=d; }
+      else cellFn(e, k, d);
+      g.appendChild(e);
+    }
+    box.appendChild(g); container.appendChild(box);
+  }
+}
+
+function counts(k){
+  let y=0,n=0; for (const p of Object.values(people)) { const v=p.days?.[k]; if(v==="y")y++; else if(v==="n")n++; } return {y,n};
+}
+
+function renderEdit(){
+  const p = people[me];
+  $("#editTitle").textContent = p ? `2. Дати: ${p.name}` : "2. Твої дати";
+  $("#editCard").style.opacity = p ? "1" : ".55";
+  buildMonths($("#editCal"), (e,k,d) => {
+    const v = p?.days?.[k];
+    if (v==="y") e.classList.add("yes"); else if (v==="n") e.classList.add("no");
+    const c = counts(k);
+    e.innerHTML = `${d}<span class="cnt">${c.y||c.n ? `${c.y}✓ ${c.n}✗` : "&nbsp;"}</span>`;
+    e.setAttribute("aria-label", `${fmt(k)}: ${v==="y"?"можу":v==="n"?"не можу":"не відмічено"}`);
+  });
+}
+
+function windowsFor(len){
+  const list = Object.values(people).filter(p => p.days && Object.keys(p.days).length);
+  const res = [];
+  for (let i=0; i+len<=allDays.length; i++){
+    const span = allDays.slice(i,i+len);
+    const free=[], maybe=[], busy=[]; let yesDays=0;
+    for (const p of list){
+      let bad=false, all=true;
+      for (const k of span){ const v=p.days[k]; if(v==="n") bad=true; else if(v==="y") yesDays++; else all=false; }
+      (bad?busy:all?free:maybe).push(p.name);
+    }
+    res.push({start:span[0], end:span[len-1], span, free, maybe, busy, yesDays});
+  }
+  res.sort((a,b)=> a.busy.length-b.busy.length || b.free.length-a.free.length || b.yesDays-a.yesDays || a.start.localeCompare(b.start));
+  // прибрати майже однакові вікна (що сильно перекриваються)
+  const picked=[];
+  for (const w of res){ if (picked.length>=4) break; if (picked.every(q => Math.abs(allDays.indexOf(q.start)-allDays.indexOf(w.start)) >= Math.max(2, Math.ceil(len/2)))) picked.push(w); }
+  return {picked, total:list.length};
+}
+
+function renderSummary(){
+  const len = +$("#len").value;
+  $("#lenVal").textContent = `${len} ${len<5?"дні":"днів"}`;
+  const {picked,total} = windowsFor(len);
+  const box = $("#windows");
+  if (!total) { box.innerHTML = `<div class="empty">Поки ніхто не відмітив дати. Почни з себе 👆</div>`; bestSel=0; }
+  else {
+    if (bestSel>=picked.length) bestSel=0;
+    box.innerHTML = picked.map((w,i)=>`
+      <div class="win ${i===bestSel?"sel":""}" data-i="${i}">
+        <b>${i===0?"🏆 ":""}${fmt(w.start)} – ${fmt(w.end)}</b> · точно можуть ${w.free.length} з ${total}${w.busy.length?`, не можуть ${w.busy.length}`:""}
+        <div class="who">${[
+          w.free.length?`<span class="y">✓ ${w.free.map(esc).join(", ")}</span>`:"",
+          w.maybe.length?`<span>? ${w.maybe.map(esc).join(", ")} (не все відмічено)</span>`:"",
+          w.busy.length?`<span class="n">✗ ${w.busy.map(esc).join(", ")}</span>`:""
+        ].filter(Boolean).join(" · ")}</div>
+      </div>`).join("");
+    box.querySelectorAll(".win").forEach(el => el.onclick = () => { bestSel=+el.dataset.i; renderSummary(); });
+  }
+  const sel = new Set(total ? picked[bestSel]?.span : []);
+  const n = Object.keys(people).length;
+  buildMonths($("#heatCal"), (e,k,d) => {
+    e.classList.add("heat"); e.tabIndex=-1;
+    const c = counts(k);
+    if (c.n) { e.style.background="var(--no)"; e.style.borderColor="var(--no)"; e.classList.add("hot"); }
+    else if (c.y && c.y===n) { e.style.background="var(--yes)"; e.style.borderColor="var(--yes)"; e.classList.add("hot"); }
+    else if (c.y) { e.style.background="var(--yes-soft)"; }
+    if (sel.has(k)) e.classList.add("best");
+    e.innerHTML = `${d}<span class="cnt">${c.y||c.n?`${c.y}✓ ${c.n}✗`:"&nbsp;"}</span>`;
+    const who = Object.values(people).map(p=>p.days?.[k]==="y"?`✓ ${p.name}`:p.days?.[k]==="n"?`✗ ${p.name}`:null).filter(Boolean);
+    e.title = `${fmt(k)}\n${who.join("\n")||"ніхто не відмітив"}`;
+  });
+}
+
+function renderPeople(){
+  const list = Object.entries(people).sort((a,b)=>a[1].name.localeCompare(b[1].name,"uk"));
+  $("#people").innerHTML = list.map(([k,p])=>`<button type="button" class="chip ${k===me?"active":""}" data-k="${k}">${esc(p.name)}</button>`).join("");
+  $("#peopleHint").hidden = !list.length;
+  $("#people").querySelectorAll(".chip").forEach(b => b.onclick = () => { me=b.dataset.k; ls.set("nd-me",me); $("#nameInput").value=people[me].name; render(); $("#editCard").scrollIntoView({behavior:"smooth",block:"start"}); });
+  $("#table").innerHTML = list.length ? `<table><thead><tr><th>Ім'я</th><th>✓ можу</th><th>✗ не можу</th><th></th></tr></thead><tbody>${
+    list.map(([k,p])=>{ const v=Object.values(p.days||{}); return `<tr><td>${esc(p.name)}</td><td class="num">${v.filter(x=>x==="y").length}</td><td class="num">${v.filter(x=>x==="n").length}</td><td class="act"><button type="button" data-edit="${k}">Змінити</button> <button type="button" data-del="${k}">Видалити</button></td></tr>`; }).join("")
+  }</tbody></table>` : `<div class="empty">Ще нікого немає.</div>`;
+  $("#table").querySelectorAll("[data-edit]").forEach(b => b.onclick = () => $(`.chip[data-k="${b.dataset.edit}"]`).click());
+  $("#table").querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+    const k=b.dataset.del; if (!confirm(`Видалити ${people[k].name} і всі його/її дати?`)) return;
+    delete people[k]; if (me===k){ me=""; ls.set("nd-me",""); } scheduleSave(k); render();
+  });
+}
+
+function render(){
+  if (!remote) { $("#banner").hidden=false; $("#banner").innerHTML="🧪 Демо-режим: дати зберігаються лише в цьому браузері. Щоб їх бачили всі, підключи базу (рядок <code>firebaseUrl</code> у коді)."; }
+  renderPeople(); renderEdit(); renderSummary();
+}
+
+/* ===== Взаємодія ===== */
+$("#nameForm").onsubmit = e => {
+  e.preventDefault();
+  const name = $("#nameInput").value.trim().replace(/\s+/g," ");
+  if (!name) { $("#nameInput").focus(); return; }
+  const k = keyOf(name);
+  if (!people[k]) { people[k] = {name, days:{}, updated:Date.now()}; scheduleSave(k); }
+  me = k; ls.set("nd-me", me); render();
+};
+
+document.querySelectorAll(".mode").forEach(b => b.onclick = () => {
+  mode = b.dataset.mode;
+  document.querySelectorAll(".mode").forEach(x => x.classList.toggle("active", x===b));
+});
+
+function setDay(k, v){
+  const p = people[me]; if (!p) return false;
+  p.days = p.days || {};
+  if ((p.days[k]||"") === v) return false;
+  if (v) p.days[k]=v; else delete p.days[k];
+  p.updated = Date.now(); return true;
+}
+function needName(){ $("#nameInput").focus(); setStatus("Спершу вкажи своє ім'я вгорі 👆"); }
+
+// натискання та протягування мишкою
+let painting = null; // значення, яким малюємо
+const cal = $("#editCal");
+cal.addEventListener("pointerdown", e => {
+  const c = e.target.closest(".day[data-k]"); if (!c || c.classList.contains("out")) return;
+  if (!people[me]) { needName(); return; }
+  const cur = people[me].days?.[c.dataset.k] || "";
+  painting = cur === mode ? "" : mode; // повторне натискання знімає позначку
+  if (setDay(c.dataset.k, painting)) { scheduleSave(me); renderEdit(); }
+  if (e.pointerType !== "mouse") painting = null; // на телефоні лише тап, щоб не заважати скролу
+});
+cal.addEventListener("pointerover", e => {
+  if (painting === null) return;
+  const c = e.target.closest(".day[data-k]"); if (!c || c.classList.contains("out")) return;
+  if (setDay(c.dataset.k, painting)) { scheduleSave(me); renderEdit(); }
+});
+let lastSnap = "";
+window.addEventListener("pointerup", () => {
+  painting = null;
+  const snap = JSON.stringify(people[me]?.days || {});
+  if (snap !== lastSnap) { lastSnap = snap; renderPeople(); renderSummary(); }
+});
+cal.addEventListener("keydown", e => { // клавіатура: Enter/пробіл на дні
+  if (e.key!=="Enter" && e.key!==" ") return;
+  const c = e.target.closest(".day[data-k]"); if (!c) return; e.preventDefault();
+  if (!people[me]) return needName();
+  const cur = people[me].days?.[c.dataset.k] || "";
+  if (setDay(c.dataset.k, cur===mode?"":mode)) { scheduleSave(me); render(); $(`#editCal .day[data-k="${c.dataset.k}"]`)?.focus(); }
+});
+
+$("#fillRest").onclick = () => {
+  if (!people[me]) return needName();
+  let ch=false; for (const k of allDays) if (!people[me].days?.[k]) ch = setDay(k,"y") || ch;
+  if (ch) { scheduleSave(me); render(); }
+};
+$("#clearAll").onclick = () => {
+  if (!people[me]) return needName();
+  if (!Object.keys(people[me].days||{}).length || !confirm(`Очистити всі дати для ${people[me].name}?`)) return;
+  people[me].days = {}; people[me].updated=Date.now(); scheduleSave(me); render();
+};
+$("#len").oninput = () => { bestSel=0; renderSummary(); };
+
+(async () => {
+  try { people = await store.load(); } catch(e){ setStatus("Не вдалося завантажити дані"); }
+  if (me && people[me]) $("#nameInput").value = people[me].name; else if (me && !people[me]) me = "";
+  render();
+  store.watch(refresh);
+})();
+</script>
+</body>
+</html>
