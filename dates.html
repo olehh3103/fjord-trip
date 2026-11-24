@@ -142,7 +142,11 @@ td.act button{padding:5px 10px;font-size:13px}
       <b id="lenVal">7 днів</b>
     </div>
     <div class="windows" id="windows"></div>
-    <div class="months" id="heatCal" style="margin-top:18px"></div>
+    <h3 style="margin:22px 0 4px;font-size:16px">Хто коли може</h3>
+    <p class="muted" style="margin:0 0 10px">Рядок = людина, клітинка = день. Натисни на ім'я, щоб змінити дати цієї людини.</p>
+    <div id="whoTL"></div>
+    <h3 style="margin:22px 0 10px;font-size:16px">Календар: скільки людей може</h3>
+    <div class="months" id="heatCal"></div>
     <div class="legend">
       <span><i style="background:var(--yes)"></i>усі, хто відмітився, можуть</span>
       <span><i style="background:var(--yes-soft)"></i>частина може</span>
@@ -157,6 +161,7 @@ td.act button{padding:5px 10px;font-size:13px}
   </section>
 </div>
 
+<script src="who-when.js"></script>
 <script>
 /* ===== Налаштування =====
    firebaseUrl: адреса Firebase Realtime Database, напр.
@@ -275,25 +280,7 @@ function renderEdit(){
   });
 }
 
-function windowsFor(len){
-  const list = Object.values(people).filter(p => p.days && Object.keys(p.days).length);
-  const res = [];
-  for (let i=0; i+len<=allDays.length; i++){
-    const span = allDays.slice(i,i+len);
-    const free=[], maybe=[], busy=[]; let yesDays=0;
-    for (const p of list){
-      let bad=false, all=true;
-      for (const k of span){ const v=p.days[k]; if(v==="n") bad=true; else if(v==="y") yesDays++; else all=false; }
-      (bad?busy:all?free:maybe).push(p.name);
-    }
-    res.push({start:span[0], end:span[len-1], span, free, maybe, busy, yesDays});
-  }
-  res.sort((a,b)=> a.busy.length-b.busy.length || b.free.length-a.free.length || b.yesDays-a.yesDays || a.start.localeCompare(b.start));
-  // прибрати майже однакові вікна (що сильно перекриваються)
-  const picked=[];
-  for (const w of res){ if (picked.length>=4) break; if (picked.every(q => Math.abs(allDays.indexOf(q.start)-allDays.indexOf(w.start)) >= Math.max(2, Math.ceil(len/2)))) picked.push(w); }
-  return {picked, total:list.length};
-}
+function windowsFor(len){ return WhoWhen.windows(people, len); }
 
 function renderSummary(){
   const len = +$("#len").value;
@@ -315,6 +302,7 @@ function renderSummary(){
     box.querySelectorAll(".win").forEach(el => el.onclick = () => { bestSel=+el.dataset.i; renderSummary(); });
   }
   const sel = new Set(total ? picked[bestSel]?.span : []);
+  WhoWhen.timeline($("#whoTL"), people, { highlight: sel, onName: k => $(`.chip[data-k="${k}"]`)?.click() });
   const n = Object.keys(people).length;
   buildMonths($("#heatCal"), (e,k,d) => {
     e.classList.add("heat"); e.tabIndex=-1;

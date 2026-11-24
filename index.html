@@ -182,6 +182,10 @@ footer a{color:var(--muted)}
 .mapwrap{margin-top:26px}
 .map-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .map-head h2{font-size:22px}
+.when{margin-top:26px}
+.when-best{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;margin:0 0 12px;font-size:15px}
+.when-best b{font-size:17px}
+.when-best .muted{color:var(--muted);font-size:13px}
 #map.dim:not(.sat) .leaflet-tile-pane{filter:brightness(.72) contrast(1.05) saturate(.85)}
 #map{height:440px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);z-index:0}
 .leaflet-container{font-family:var(--font);background:var(--surface)}
@@ -231,6 +235,12 @@ footer a{color:var(--muted)}
     <span class="chip">🌡 −4…+6 °C</span><span class="chip">☀ ~12 год світла</span><span class="chip">🚗 ~1 250 км по кільцю</span>
     <span class="chip warn">Язик троля взимку закритий: лід</span>
   </div>
+  <section class="when" id="when-sec" aria-label="Коли їдемо">
+    <div class="map-head"><h2>Коли їдемо?</h2>
+      <a class="btn primary" href="dates.html">🗓 Обрати свої дні</a></div>
+    <div class="when-best" id="whenBest">Завантажую, хто коли може…</div>
+    <div id="whenTL"></div>
+  </section>
   <section class="mapwrap" id="map-sec" aria-label="Мапа маршруту">
     <div class="map-head"><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><h2>Маршрут на мапі</h2>
       <div class="seg" role="group" aria-label="Вид мапи"><button data-tiles="topo" aria-pressed="true">Мапа</button><button data-tiles="sat" aria-pressed="false">Супутник</button></div></div>
@@ -704,5 +714,26 @@ if(location.hash) setTimeout(()=>go(location.hash.slice(1)),50);
 window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
 </script>
 
+<script src="who-when.js"></script>
+<script>
+(async () => {
+  const best = document.getElementById("whenBest"), tl = document.getElementById("whenTL");
+  try {
+    const people = await WhoWhen.load();
+    const len = 8; // тривалість поїздки за маршрутом
+    const {picked, total} = WhoWhen.windows(people, len, 1);
+    const w = picked[0];
+    if (!total) {
+      best.innerHTML = `Поки ніхто не відмітив дати. Обери, коли тобі зручно, кнопкою вище.`;
+    } else {
+      best.innerHTML = `<span>🏆 Найкращі ${len} днів:</span> <b>${WhoWhen.fmt(w.start)} – ${WhoWhen.fmt(w.end)}</b>
+        <span class="muted">точно можуть ${w.free.length} з ${total}${w.busy.length ? ` · не можуть: ${w.busy.map(WhoWhen.esc).join(", ")}` : ""}${w.maybe.length ? ` · не все відмітили: ${w.maybe.map(WhoWhen.esc).join(", ")}` : ""}</span>`;
+    }
+    WhoWhen.timeline(tl, people, { highlight: new Set(total ? w.span : []) });
+  } catch (e) {
+    best.textContent = "Не вдалося завантажити дати. Відкрий сторінку вибору днів.";
+  }
+})();
+</script>
 </body>
 </html>
