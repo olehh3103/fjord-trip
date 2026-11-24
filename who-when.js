@@ -2,7 +2,7 @@
 (function(){
   const DB = "https://norway-dates-default-rtdb.europe-west1.firebasedatabase.app";
   const PATH = "norway2027";
-  const START = new Date(2027, 1, 15), END = new Date(2027, 3, 15);
+  const START = new Date(2027, 2, 1), END = new Date(2027, 3, 15);
   const MON_GEN = ["січня","лютого","березня","квітня","травня","червня","липня","серпня","вересня","жовтня","листопада","грудня"];
   const MON_NOM = ["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"];
   const pad = n => String(n).padStart(2,"0");
