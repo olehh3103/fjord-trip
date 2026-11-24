@@ -591,12 +591,11 @@ function stayCard(s,i,key){
 function renderDays(){
   $("#days").innerHTML=DAYS.map((d,i)=>{
     let h=`<section class="day" id="${d.id}"><div class="day-head"><div>
-      <div class="eyebrow">${i===0?"День 0":"День "+i} · ${dt(addD(tripStart(),i))}</div><h2>${esc(d.title)}</h2>
+      <div class="eyebrow">${i===0?"День 0":"День "+i} · ${dt(addD(tripStart(),i))}</div><h2>${esc(d.title)}</h2>${d.flights?`<div class="chosen-fl" id="outChosen" style="margin:10px 0 4px"></div>`:""}
       ${d.textFn?d.textFn():d.text?`<p>${esc(d.text)}</p>`:""}</div>
       ${d.route?`<a class="btn" href="${d.route[0]}" target="_blank" rel="noopener">🗺 ${esc(d.route[1])}</a>`:""}</div>`;
     if(d.drive||d.wx) h+=`<div class="timeline">${d.drive?`<span class="chip">🚗 ${esc(d.drive)}</span>`:""}${d.wx?`<span class="chip">🌡 ${esc(d.wx)}</span>`:""}${i>0?`<button class="chip" data-mapday="${d.id}">📍 На мапі</button>`:""}</div>`;
     if(d.timeline) h+=`<div class="timeline">${d.timeline.map(t=>`<span class="chip"><b>${t[0]}</b> ${esc(t[1])}</span>`).join("")}</div>`;
-    if(d.flights) h+=`<div class="chosen-fl" id="outChosen"></div>`;
     if(d.places) h+=`<h3 class="row-title">Що бачимо</h3><div class="grid">${d.places.map(p=>`
       <div class="card"><div class="ph">${photo(p[0],p[1])}${favBtn("pl-"+p[0])}</div>
       <div class="meta"><div class="l1"><span>${esc(p[1])}</span></div><div class="muted">${esc(p[2])}</div>
