@@ -215,6 +215,8 @@ footer a{color:var(--muted)}
 .pick2,.tk .pick2{margin-top:2px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;align-self:flex-start}
 .tk.top .pick2{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .tix-empty{color:var(--muted);font-size:14px;padding:6px 0}
+.day-head ul.steps{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:15px;line-height:1.65;max-width:70ch}
+.day-head ul.steps b{color:var(--fg)}
 .chosen-fl{border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;background:var(--card);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-top:12px;font-variant-numeric:tabular-nums}
 .chosen-fl b{font-size:16px}
 .chosen-fl .muted{color:var(--muted);font-size:13px}
@@ -567,10 +569,14 @@ function day0Text(){
   const hm=x=>`${String(Math.floor(x/60)%24).padStart(2,"0")}:${String(x%60).padStart(2,"0")}`;
   const city=[t+60,t+90];          /* вихід ~30 хв + потяг 20–25 хв + дорога по місту 15–30 хв */
   const late=city[0]>=18*60;
-  return `<p>Приземляємось у Ґардермуені о <b>${o.arr}</b>. Далі так: ~30 хв на вихід (багажу не здаємо, тож швидко),
-    потяг до Oslo S 20–25 хв (Vy ~130 NOK або Flytoget ~230 NOK, ходять кожні 10–20 хв), потім 15–30 хв до дядька Стасі.
-    У місті будемо орієнтовно о <b>${hm(city[0])}–${hm(city[1])}</b>, разом з аеропорту ~1–1,5 год.</p>
-    <p>Заселяємось у дядька Стасі${late?", а погуляти вже встигнемо хіба що трохи ввечері":" і йдемо трохи погуляти: Опера й Акер Брюгге за 10–15 хв пішки від Oslo S"}. Світло в середині березня до ~18:30.</p>`;
+  return `<ul class="steps">
+    <li>Приземлення в Ґардермуені: <b>${o.arr}</b></li>
+    <li>Вихід з аеропорту: ~30 хв (багажу не здаємо)</li>
+    <li>Потяг до Oslo S: 20–25 хв, ходять кожні 10–20 хв (Vy ~130 NOK, Flytoget ~230 NOK)</li>
+    <li>До дядька Стасі: ще 15–30 хв</li>
+    <li>У місті орієнтовно: <b>${hm(city[0])}–${hm(city[1])}</b>, разом ~1–1,5 год</li>
+    <li>Заселяємось у дядька Стасі, решта вечора вільна${late?"":"; світло до ~18:30"}</li>
+  </ul>`;
 }
 function tripStart(){return chosen().o?.d||"2027-03-13"}
 function stayCard(s,i,key){
@@ -591,10 +597,11 @@ function stayCard(s,i,key){
 function renderDays(){
   $("#days").innerHTML=DAYS.map((d,i)=>{
     let h=`<section class="day" id="${d.id}"><div class="day-head"><div>
-      <div class="eyebrow">${i===0?"День 0":"День "+i} · ${dt(addD(tripStart(),i))}</div><h2>${esc(d.title)}</h2>${d.flights?`<div class="chosen-fl" id="outChosen" style="margin:10px 0 4px"></div>`:""}
+      <div class="eyebrow">${i===0?"День 0":"День "+i} · ${dt(addD(tripStart(),i))}</div><h2>${esc(d.title)}</h2>
       ${d.textFn?d.textFn():d.text?`<p>${esc(d.text)}</p>`:""}</div>
       ${d.route?`<a class="btn" href="${d.route[0]}" target="_blank" rel="noopener">🗺 ${esc(d.route[1])}</a>`:""}</div>`;
     if(d.drive||d.wx) h+=`<div class="timeline">${d.drive?`<span class="chip">🚗 ${esc(d.drive)}</span>`:""}${d.wx?`<span class="chip">🌡 ${esc(d.wx)}</span>`:""}${i>0?`<button class="chip" data-mapday="${d.id}">📍 На мапі</button>`:""}</div>`;
+    if(d.flights) h+=`<div class="chosen-fl" id="outChosen"></div>`;
     if(d.timeline) h+=`<div class="timeline">${d.timeline.map(t=>`<span class="chip"><b>${t[0]}</b> ${esc(t[1])}</span>`).join("")}</div>`;
     if(d.places) h+=`<h3 class="row-title">Що бачимо</h3><div class="grid">${d.places.map(p=>`
       <div class="card"><div class="ph">${photo(p[0],p[1])}${favBtn("pl-"+p[0])}</div>
