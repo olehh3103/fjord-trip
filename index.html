@@ -274,6 +274,7 @@ footer a{color:var(--muted)}
     <p class="tix-note" id="flNote"></p>
     <div class="cmb">
       <div class="cmb-row"><span class="cmb-l">Звідки летимо</span><div class="filters" id="fromF"></div></div>
+      <div class="cmb-row"><span class="cmb-l">Куди повертаємось</span><div class="filters" id="toF"></div></div>
       <div class="cmb-row"><span class="cmb-l">Ночей у Норвегії</span><div class="filters" id="nightsF"></div></div>
     </div>
     <div class="tix" id="combos"></div>
@@ -485,7 +486,7 @@ const backsAll=()=>FL.filter(f=>f.f===homeAp()&&PL[f.t]);
 const cities=list=>PL_ORDER.filter(c=>list.some(f=>f.f===c||f.t===c));
 function defSel(list){return cities(list)}
 function combos(ignoreDay){
-  const from=new Set(S.fromSel||defSel(outsAll())), to=new Set(defSel(backsAll()));
+  const from=new Set(S.fromSel||defSel(outsAll())), to=new Set(S.toSel||defSel(backsAll()));
   const res=[];
   for(const o of outsAll()){
     if(!from.has(o.f)) continue;
@@ -512,6 +513,7 @@ function renderCombos(){
   const from=S.fromSel||defSel(outsAll()), to=S.toSel||defSel(backsAll());
   const minP=(list,c)=>Math.min(...list.filter(f=>f.f===c||f.t===c).map(f=>f.p));
   $("#fromF").innerHTML=oc.map(c=>chip("from",c,PL[c],from.includes(c),` <small>від ${minP(outsAll(),c)} €${FAR.has(c)?" · далеко":""}</small>`)).join("");
+  $("#toF").innerHTML=bc.map(c=>chip("to",c,PL[c],to.includes(c),` <small>від ${minP(backsAll(),c)} €${FAR.has(c)?" · далеко":""}</small>`)).join("");
   $("#nightsF").innerHTML=[5,6,7,8,9].map(n=>chip("n",n,n,S.nightsSel.includes(n))).join("");
   const list=combos(false), {o:co,b:cb}=chosen();
   const seen=new Set(), top=[];
@@ -525,8 +527,8 @@ function renderCombos(){
       <div class="sub2">${nightsOf(c.o.d,c.b.d)} ночей · ${+c.o.d.slice(8)}–${+c.b.d.slice(8)} березня${c.b.f==="BGO"?" · назад з Бергена":""}${FAR.has(c.o.f)||FAR.has(c.b.t)?" · Гданськ далеко від України":""}</div>
       <div class="leg">${leg("→",c.o)}${leg("←",c.b)}</div>
       <button class="pick2" data-pick="${fkey(c.o)}|${fkey(c.b)}">${on?"✓ Обрано, враховано в бюджеті":"Обрати"}</button></div>`;
-  }).join(""):`<div class="tix-empty">Немає комбінацій під ці фільтри. Спробуй іншу кількість ночей, інше місто або зніми «лише дні, коли всі можуть».</div>`;
-  $("#flNote").textContent=`Прямі рейси з Польщі в Ґардермуен (OSL) і назад, квитки до 50 € в одну сторону, лише в дні, коли всі можуть. Ціна за одну людину в обидва боки, тільки рюкзак під сидіння, Kiwi.com на ${FL_DATE}. Назад можна прилетіти в інше місто. Бронює кожен сам.`;
+  }).join(""):`<div class="tix-empty">Під ці фільтри немає квитків до 50 € в одну сторону. Спробуй іншу кількість ночей або інше місто.</div>`;
+  $("#flNote").textContent=`Прямі рейси з Польщі в Ґардермуен (OSL) і назад, квитки до 50 € в одну сторону, лише в дні, коли всі можуть. Ціна за одну людину в обидва боки, тільки рюкзак під сидіння, Kiwi.com на ${FL_DATE}. Повертатися можна в інше місто, ніж вилітали. Бронює кожен сам.`;
 }
 function renderChosen(){
   const {o,b}=chosen();
