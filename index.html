@@ -271,14 +271,10 @@ footer a{color:var(--muted)}
     <div class="when-best" id="whenBest">Завантажую, хто коли може…</div>
     <div id="whenTL"></div>
     <h3 class="tix-h">✈️ Квитки: найкращі комбінації</h3>
-    <div class="when-best" id="cheapest"></div>
     <p class="tix-note" id="flNote"></p>
     <div class="cmb">
-      <div class="cmb-row"><span class="cmb-l">Виліт з</span><div class="filters" id="fromF"></div></div>
-      <div class="cmb-row"><span class="cmb-l">Повернення в</span><div class="filters" id="toF"></div></div>
-      <div class="cmb-row"><span class="cmb-l">Ночей у Норвегії</span><div class="filters" id="nightsF"></div>
-        <label class="cmb-chk"><input type="checkbox" id="onlyFree"> лише дні, коли всі можуть</label></div>
-      <div class="cmb-row"><span class="cmb-l">День вильоту</span><div class="dstrip" id="dateF"></div></div>
+      <div class="cmb-row"><span class="cmb-l">Звідки летимо</span><div class="filters" id="fromF"></div></div>
+      <div class="cmb-row"><span class="cmb-l">Ночей у Норвегії</span><div class="filters" id="nightsF"></div></div>
     </div>
     <div class="tix" id="combos"></div>
   </section>
@@ -489,15 +485,14 @@ const backsAll=()=>FL.filter(f=>f.f===homeAp()&&PL[f.t]);
 const cities=list=>PL_ORDER.filter(c=>list.some(f=>f.f===c||f.t===c));
 function defSel(list){return cities(list)}
 function combos(ignoreDay){
-  const from=new Set(S.fromSel||defSel(outsAll())), to=new Set(S.toSel||defSel(backsAll()));
+  const from=new Set(S.fromSel||defSel(outsAll())), to=new Set(defSel(backsAll()));
   const res=[];
   for(const o of outsAll()){
     if(!from.has(o.f)) continue;
-    if(!ignoreDay&&S.day&&o.d!==S.day) continue;
-    if(S.onlyFree&&FREE&&!FREE.has(o.d)) continue;
+    if(FREE&&!FREE.has(o.d)) continue;
     for(const b of backsAll()){
       if(!to.has(b.t)||!S.nightsSel.includes(nightsOf(o.d,b.d))) continue;
-      if(S.onlyFree&&FREE&&!FREE.has(b.d)) continue;
+      if(FREE&&!FREE.has(b.d)) continue;
       res.push({o,b,p:o.p+b.p});
     }
   }
@@ -517,20 +512,7 @@ function renderCombos(){
   const from=S.fromSel||defSel(outsAll()), to=S.toSel||defSel(backsAll());
   const minP=(list,c)=>Math.min(...list.filter(f=>f.f===c||f.t===c).map(f=>f.p));
   $("#fromF").innerHTML=oc.map(c=>chip("from",c,PL[c],from.includes(c),` <small>від ${minP(outsAll(),c)} €${FAR.has(c)?" · далеко":""}</small>`)).join("");
-  $("#toF").innerHTML=bc.length?bc.map(c=>chip("to",c,PL[c],to.includes(c),` <small>від ${minP(backsAll(),c)} €${FAR.has(c)?" · далеко":""}</small>`)).join("")
-    :`<span class="tix-empty">З ${S.ret==="A"?"Бергена":"Осло"} прямих рейсів у Польщу на ці дні немає.</span>`;
   $("#nightsF").innerHTML=[5,6,7,8,9].map(n=>chip("n",n,n,S.nightsSel.includes(n))).join("");
-  $("#onlyFree").checked=S.onlyFree; $("#onlyFree").disabled=!FREE;
-  /* смужка днів: найдешевша комбінація для кожного дня вильоту */
-  const all=combos(true), best={};
-  all.forEach(c=>{if(!(c.o.d in best)||c.p<best[c.o.d]) best[c.o.d]=c.p});
-  const days=[...new Set(outsAll().map(f=>f.d))].sort();
-  const vals=Object.values(best), lo=vals.length?Math.min(...vals):0;
-  if(S.day&&!(S.day in best)) S.day=null;
-  $("#dateF").innerHTML=chip("day","","<b>Будь-який</b><span>&nbsp;</span>",!S.day)+days.map(d=>{
-    const v=best[d], wd=new Date(d+"T12:00").toLocaleDateString("uk-UA",{weekday:"short"});
-    return `<button aria-pressed="${S.day===d}" data-day="${d}" ${v==null?"disabled":""} class="${v!=null&&v<=lo+5?"cheap":""}"><b>${+d.slice(8)}</b>${wd}<span>${v==null?"—":v+" €"}</span></button>`;
-  }).join("");
   const list=combos(false), {o:co,b:cb}=chosen();
   const seen=new Set(), top=[];
   for(const c of list){const k=c.o.f+c.b.t+c.o.d; if(seen.has(k)) continue; seen.add(k); top.push(c); if(top.length>=6) break}
@@ -544,17 +526,7 @@ function renderCombos(){
       <div class="leg">${leg("→",c.o)}${leg("←",c.b)}</div>
       <button class="pick2" data-pick="${fkey(c.o)}|${fkey(c.b)}">${on?"✓ Обрано, враховано в бюджеті":"Обрати"}</button></div>`;
   }).join(""):`<div class="tix-empty">Немає комбінацій під ці фільтри. Спробуй іншу кількість ночей, інше місто або зніми «лише дні, коли всі можуть».</div>`;
-  /* швидкий підсумок: найдешевше взагалі (усі міста, 6–8 ночей, дні коли всі можуть) */
-  const allC=[];
-  for(const o of outsAll()) for(const b of backsAll()){const n=nightsOf(o.d,b.d); if(n<6||n>8) continue; if(FREE&&(!FREE.has(o.d)||!FREE.has(b.d))) continue; allC.push({o,b,p:o.p+b.p,n})}
-  allC.sort((x,y)=>x.p-y.p);
-  const near=allC.find(c=>!FAR.has(c.o.f)&&!FAR.has(c.b.t));
-  const route=(o,b)=>{const no=b.f==="BGO"?"Норвегія":"Осло";return o.f===b.t?`${PL[o.f]} ⇄ ${no}`:`${PL[o.f]} → ${no} → ${PL[b.t]}`};
-  const fmtC=c=>`${route(c.o,c.b)} · ${+c.o.d.slice(8)}–${+c.b.d.slice(8)} березня (${c.n} ноч.)`;
-  $("#cheapest").innerHTML=allC.length?`<span>🏆 Найдешевше:</span> <b>${allC[0].p} €</b> <span>${fmtC(allC[0])}</span>
-    <button class="pick2" data-pick="${fkey(allC[0].o)}|${fkey(allC[0].b)}">Обрати</button>
-    ${near&&near!==allC[0]?`<span class="muted">без Гданська: ${near.p} € · ${fmtC(near)}</span>`:""}`:"";
-  $("#flNote").textContent=`Лише Польща й лише прямі рейси в Ґардермуен (OSL). Беремо тільки квитки до 50 € в одну сторону. Рахуються всі міста й 6–8 ночей, фільтри нижче звужують вибір. Ціна за одну людину в обидва боки, тільки рюкзак під сидіння, Kiwi.com на ${FL_DATE}. Обери комбінацію, і дати днів та бюджет нижче підлаштуються. Бронює кожен сам.`;
+  $("#flNote").textContent=`Прямі рейси з Польщі в Ґардермуен (OSL) і назад, квитки до 50 € в одну сторону, лише в дні, коли всі можуть. Ціна за одну людину в обидва боки, тільки рюкзак під сидіння, Kiwi.com на ${FL_DATE}. Назад можна прилетіти в інше місто. Бронює кожен сам.`;
 }
 function renderChosen(){
   const {o,b}=chosen();
@@ -783,7 +755,6 @@ function focusMap(id){
 
 /* ======== BOOT ======== */
 renderHero(); renderCats(); renderCombos(); renderDays(); initMap(); budget();
-$("#onlyFree").addEventListener("change",e=>{S.onlyFree=e.target.checked;save();renderCombos()});
 document.querySelectorAll("section.day").forEach(s=>io.observe(s));
 if(location.hash) setTimeout(()=>go(location.hash.slice(1)),50);
 window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
