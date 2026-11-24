@@ -40,6 +40,43 @@
     return {picked, total:list.length};
   }
 
+  /* Найдовші суцільні проміжки, де найменше людей поставили ✗ (в ідеалі ніхто).
+     Для кожного: хто ✓ на всі дні, хто не все відмітив, хто має ✗,
+     і core — найдовша частина, де ✓ ставить найбільше людей. */
+  function ranges(people, limit = 3){
+    const list = Object.values(people).filter(p => p.days && Object.keys(p.days).length);
+    if (!list.length) return {picked: [], total: 0};
+    const busy = DAYS.map(k => list.filter(p => p.days[k] === "n").length);
+    const yes  = DAYS.map(k => list.filter(p => p.days[k] === "y").length);
+    const minB = Math.min(...busy);
+    const runs = [];
+    for (let i = 0; i < DAYS.length; i++){
+      if (busy[i] !== minB) continue;
+      let j = i; while (j + 1 < DAYS.length && busy[j + 1] === minB) j++;
+      const span = DAYS.slice(i, j + 1);
+      const free = [], maybe = [], bad = [];
+      for (const p of list){
+        const vals = span.map(k => p.days[k]);
+        (vals.includes("n") ? bad : vals.every(v => v === "y") ? free : maybe).push(p.name);
+      }
+      // ядро: найдовша частина з максимальною кількістю ✓
+      const maxY = Math.max(...yes.slice(i, j + 1));
+      let core = null;
+      for (let a = i; a <= j; a++){
+        if (yes[a] !== maxY) continue;
+        let b = a; while (b + 1 <= j && yes[b + 1] === maxY) b++;
+        if (!core || b - a > core.end - core.start) core = {start: a, end: b};
+        a = b;
+      }
+      runs.push({i, start: span[0], end: span[span.length - 1], span, len: span.length,
+        free, maybe, busy: bad, yesDays: yes.slice(i, j + 1).reduce((s, v) => s + v, 0),
+        core: core && {start: DAYS[core.start], end: DAYS[core.end], len: core.end - core.start + 1, yes: maxY}});
+      i = j;
+    }
+    runs.sort((a, b) => b.len - a.len || b.yesDays - a.yesDays || a.i - b.i);
+    return {picked: runs.slice(0, limit), total: list.length};
+  }
+
   const CSS = `
   .ww-scroll{position:relative;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line,#e6e6e6);border-radius:12px;background:var(--card,#fff)}
   .ww{display:grid;gap:2px;padding:10px 10px 10px 0;min-width:max-content;font-size:12px}
@@ -107,5 +144,5 @@
     if (opts.onName) container.querySelectorAll("button.ww-name").forEach(b => b.onclick = () => opts.onName(b.dataset.k));
   }
 
-  window.WhoWhen = { DB, PATH, DAYS, fmt, esc, load, windows, timeline };
+  window.WhoWhen = { DB, PATH, DAYS, fmt, esc, load, windows, ranges, timeline };
 })();

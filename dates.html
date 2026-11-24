@@ -162,7 +162,7 @@ td.act button{padding:5px 10px;font-size:13px}
   </section>
 </div>
 
-<script src="who-when.js?v=3"></script>
+<script src="who-when.js?v=4"></script>
 <script>
 /* ===== Налаштування =====
    firebaseUrl: адреса Firebase Realtime Database, напр.
@@ -217,7 +217,7 @@ let me = ls.get("nd-me") || "";   // ключ людини, яку редагу�
 let mode = "y";
 let dirty = new Set();    // ключі, що чекають на збереження
 let saveTimer = null;
-let bestSel = 0;
+let bestSel = -1;
 
 function setStatus(t){ $("#status").textContent = t; }
 
@@ -291,7 +291,17 @@ function renderSummary(){
   if (!total) { box.innerHTML = `<div class="empty">Поки ніхто не відмітив дати. Почни з себе 👆</div>`; bestSel=0; }
   else {
     if (bestSel>=picked.length) bestSel=0;
-    box.innerHTML = picked.map((w,i)=>`
+    const r = WhoWhen.ranges(people, 1).picked[0];
+    box.innerHTML = (r ? `
+      <div class="win ${bestSel===-1?"sel":""}" data-i="-1">
+        <b>🗓 Найдовший проміжок${r.busy.length?"":" без «не можу»"}: ${fmt(r.start)} – ${fmt(r.end)}</b> · ${r.len} ${r.len%10===1&&r.len!==11?"день":[2,3,4].includes(r.len%10)&&![12,13,14].includes(r.len)?"дні":"днів"}
+        <div class="who">${[
+          r.free.length?`<span class="y">✓ ${r.free.map(esc).join(", ")}</span>`:"",
+          r.maybe.length?`<span>? ${r.maybe.map(esc).join(", ")} (не все відмічено)</span>`:"",
+          r.busy.length?`<span class="n">✗ ${r.busy.map(esc).join(", ")}</span>`:""
+        ].filter(Boolean).join(" · ")}</div>
+      </div>
+      <p class="muted" style="margin:6px 0 0;font-size:13px">Найкращі вікна на ${len} ${len<5?"дні":"днів"}:</p>` : "") + picked.map((w,i)=>`
       <div class="win ${i===bestSel?"sel":""}" data-i="${i}">
         <b>${i===0?"🏆 ":""}${fmt(w.start)} – ${fmt(w.end)}</b> · точно можуть ${w.free.length} з ${total}${w.busy.length?`, не можуть ${w.busy.length}`:""}
         <div class="who">${[
@@ -302,7 +312,7 @@ function renderSummary(){
       </div>`).join("");
     box.querySelectorAll(".win").forEach(el => el.onclick = () => { bestSel=+el.dataset.i; renderSummary(); });
   }
-  const sel = new Set(total ? picked[bestSel]?.span : []);
+  const sel = new Set(!total ? [] : bestSel===-1 ? (WhoWhen.ranges(people,1).picked[0]?.span||[]) : picked[bestSel]?.span);
   WhoWhen.timeline($("#whoTL"), people, { highlight: sel, onName: k => $(`.chip[data-k="${k}"]`)?.click() });
   const n = Object.keys(people).length;
   buildMonths($("#heatCal"), (e,k,d) => {

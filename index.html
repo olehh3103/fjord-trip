@@ -761,20 +761,27 @@ if(location.hash) setTimeout(()=>go(location.hash.slice(1)),50);
 window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
 </script>
 
-<script src="who-when.js?v=3"></script>
+<script src="who-when.js?v=4"></script>
 <script>
 (async () => {
   const best = document.getElementById("whenBest"), tl = document.getElementById("whenTL");
   try {
     const people = await WhoWhen.load();
-    const len = 8; // тривалість поїздки за маршрутом
-    const {picked, total} = WhoWhen.windows(people, len, 1);
+    const {picked, total} = WhoWhen.ranges(people, 1);
     const w = picked[0];
+    const dni = n => `${n} ${n%10===1&&n%100!==11?"день":[2,3,4].includes(n%10)&&![12,13,14].includes(n%100)?"дні":"днів"}`;
     if (!total) {
       best.innerHTML = `Поки ніхто не відмітив дати. Обери, коли тобі зручно, кнопкою вище.`;
     } else {
-      best.innerHTML = `<span>🏆 Найкращі ${len} днів:</span> <b>${WhoWhen.fmt(w.start)} – ${WhoWhen.fmt(w.end)}</b>
-        <span class="muted">точно можуть ${w.free.length} з ${total}${w.busy.length ? ` · не можуть: ${w.busy.map(WhoWhen.esc).join(", ")}` : ""}${w.maybe.length ? ` · не все відмітили: ${w.maybe.map(WhoWhen.esc).join(", ")}` : ""}</span>`;
+      const who = [
+        w.free.length ? `✓ на всі дні: ${w.free.map(WhoWhen.esc).join(", ")}` : "",
+        w.maybe.length ? `не все відмітили: ${w.maybe.map(WhoWhen.esc).join(", ")}` : "",
+        w.busy.length ? `не можуть: ${w.busy.map(WhoWhen.esc).join(", ")}` : ""
+      ].filter(Boolean).join(" · ");
+      const core = w.core && w.core.len < w.len && w.core.yes > w.free.length
+        ? `<span class="muted">найбільше ✓ (${w.core.yes} з ${total}): ${WhoWhen.fmt(w.core.start)} – ${WhoWhen.fmt(w.core.end)}</span>` : "";
+      best.innerHTML = `<span>🏆 Найкращий проміжок:</span> <b>${WhoWhen.fmt(w.start)} – ${WhoWhen.fmt(w.end)}</b> <span>(${dni(w.len)})</span>
+        <span class="muted">${w.busy.length ? "" : "ніхто не поставив «не можу» · "}${who}</span>${core}`;
     }
     WhoWhen.timeline(tl, people, { highlight: new Set(total ? w.span : []) });
   } catch (e) {
